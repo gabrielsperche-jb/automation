@@ -1,4 +1,4 @@
-name: Build e Teste com Maven
+name: Build Changes
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ jobs:
         id: find-module
         run: |
           CHANGED_MODULES=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep -E '^pom.xml$' | xargs dirname | sort | uniq)
-          echo "::set-output name=changed_modules::$CHANGED_MODULES"
+          echo "{name}={changed_modules} >> GITHUB_OUTPUT"
 
       - name: Environment Configuration
         uses: actions/setup-java@v1
