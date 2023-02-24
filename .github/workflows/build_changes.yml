@@ -14,8 +14,14 @@ jobs:
       - name: Identify module
         id: find-module
         run: |
-          CHANGED_MODULES=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep -E '^pom.xml$' | xargs dirname | sort | uniq)
-          echo "{name}={changed_modules} >> GITHUB_OUTPUT"
+          while read p; do
+            module_path=$(echo $p | grep -Eo 'modules/[^/]+')
+            if [ ! -z "$module_path" ]; then
+              module_name=$(echo $module_path | cut -d/ -f2)
+              echo "Module changed: $module_name"
+            fi
+          done <<< $(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...${{ github.event.pull_request.head.ref }})
+          shell: bash
 
       - name: Environment Configuration
         uses: actions/setup-java@v1
@@ -23,6 +29,3 @@ jobs:
           java-version: '8.0.192'
           java-package: jdk
           architecture: x64
-
-      - name: Build
-        run: mvn -B -T 4C clean install -pl ${{ steps.find-module.outputs.changed_modules }}
