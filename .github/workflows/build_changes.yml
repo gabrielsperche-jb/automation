@@ -11,10 +11,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: List changed directories
-        id: find-module
+      # Example 1
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+
+      - name: List all changed files
         run: |
-          git diff --name-only HEAD
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
 
       - name: Environment Configuration
         uses: actions/setup-java@v1
