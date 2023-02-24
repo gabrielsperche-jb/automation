@@ -11,17 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Identify module
+      - name: List changed directories
         id: find-module
         run: |
-          while read p; do
-            module_path=$(echo $p | grep -Eo 'modules/[^/]+')
-            if [ ! -z "$module_path" ]; then
-              module_name=$(echo $module_path | cut -d/ -f2)
-              echo "Module changed: $module_name"
-            fi
-          done <<< $(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...${{ github.event.pull_request.head.ref }})
-          shell: bash
+          git diff --name-only HEAD ${{ github.event.pull_request.base.sha }} | while read filename; do
+            dirname="$(dirname "$filename")/"
+            echo "$dirname"
+          done | sort | uniq
 
       - name: Environment Configuration
         uses: actions/setup-java@v1
