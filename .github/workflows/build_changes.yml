@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-         fetch-depth: 2  # OR "2" -> To retrieve the preceding commit.
+         fetch-depth: 50  # OR "2" -> To retrieve the preceding commit.
 
       # Example 1
       - name: Get changed files
