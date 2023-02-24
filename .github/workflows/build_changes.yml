@@ -1,8 +1,7 @@
 name: Build Changes
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  [push]
 
 jobs:
   build:
