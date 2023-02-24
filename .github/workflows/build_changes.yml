@@ -4,21 +4,18 @@ on:
   [push]
 
 jobs:
-  build:
+  listar-alteracoes:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: List all changed files
-        run: |
-          git fetch origin pull/${{ github.event.pull_request.number }}/head
-          git diff --name-only HEAD...${{ github.event.pull_request.head.sha }} | grep automation/
-
-      - name: Environment Configuration
-        uses: actions/setup-java@v1
+      - name: Checkout do Repositório
+        uses: actions/checkout@v2
         with:
-          java-version: '8.0.192'
-          java-package: jdk
-          architecture: x64
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Listar Alterações
+        run: |
+          git diff --name-only HEAD^ HEAD > arquivos.txt
+          sed -e 's|/.*||g' arquivos.txt | awk 'NF' | sort -u > diretorios.txt
+          echo "Os seguintes diretórios foram alterados nesta pull request:"
+          cat diretorios.txt
