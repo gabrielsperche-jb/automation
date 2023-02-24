@@ -1,0 +1,29 @@
+name: Build e Teste com Maven
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Identify module
+        id: find-module
+        run: |
+          CHANGED_MODULES=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep -E '^pom.xml$' | xargs dirname | sort | uniq)
+          echo "::set-output name=changed_modules::$CHANGED_MODULES"
+
+      - name: Environment Configuration
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.0.192'
+          java-package: jdk
+          architecture: x64
+
+      - name: Build
+        run: mvn -B -T 4C clean install -pl ${{ steps.find-module.outputs.changed_modules }}
