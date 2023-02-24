@@ -14,10 +14,8 @@ jobs:
       - name: List changed directories
         id: find-module
         run: |
-          git diff --name-only HEAD ${{ github.event.pull_request.base.sha }} | while read filename; do
-            dirname="$(dirname "$filename")/"
-            echo "$dirname"
-          done | sort | uniq
+          filenames=$(git diff --name-only HEAD ${{ github.event.pull_request.base.sha }})
+          echo "Os arquivos modificados são: $filenames"
 
       - name: Environment Configuration
         uses: actions/setup-java@v1
