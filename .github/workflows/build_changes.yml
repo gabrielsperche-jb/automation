@@ -10,6 +10,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check if directory exists
+        run: |
+          if [ ! -d "./automation" ]; then
+            echo "Directory does not exist"
+            exit 1
+          fi
+
       - name: List changed directories
         run: |
           check=$(git diff --name-only HEAD~1..HEAD)
