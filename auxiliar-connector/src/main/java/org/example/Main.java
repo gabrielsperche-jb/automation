@@ -3,6 +3,6 @@ package org.example;
 public class Main {
   public static void main(String[] args) {
     System.out.println("Auxiliary Module!");
-    int num = 4;
+    int num = 8;
   }
 }
