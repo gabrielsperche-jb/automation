@@ -1,9 +1,6 @@
 name: Listar diretórios modificados em pull request
 
-on:
-  pull_request:
-    branches:
-      - '!master'
+on: [push]
 
 jobs:
   listar-diretorios-modificados:
