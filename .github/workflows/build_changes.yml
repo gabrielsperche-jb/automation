@@ -21,11 +21,11 @@ jobs:
 
       - name: List Changed Modules
         run: |
-          git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq
+          modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq)
+          echo "::set-output name=modules::$modules"
         id: list_modules
 
       - name: Build Projects
         run: |
-          modules=$(echo "${{steps.list_modules.outputs}}" | tr '\n' ',')
-          echo "Building the following modules: $modules"
-          mvn --projects $modules --also-make install
+          mvn --projects ${{steps.list_modules.outputs.modules}} --also-make install
+          echo "Building the following modules: ${{steps.list_modules.outputs.modules}}"
