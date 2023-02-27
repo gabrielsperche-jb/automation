@@ -11,6 +11,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Listar diretórios modificados
+        run: echo "Thats all changes $Dirs"
         env:
           Dirs: ${{git diff --name-only HEAD}}
-        run: echo "Thats all changes $Dirs"
