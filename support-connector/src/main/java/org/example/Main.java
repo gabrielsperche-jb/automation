@@ -5,6 +5,5 @@ public class Main {
     System.out.println("Support Module!");
     int e = 4;
     int et = 4;
-    int edt = 4;
   }
 }

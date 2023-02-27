@@ -26,6 +26,6 @@ jobs:
 
       - name: Build Projects
         run: |
-          modules=$(echo "${{steps.list_modules.outputs.modules}}" | tr '\n' ',')
+          modules=$(echo "${{steps.list_modules.outputs}}" | tr '\n' ',')
           echo "Building the following modules: $modules"
           mvn --projects $modules --also-make install
