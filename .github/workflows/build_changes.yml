@@ -28,5 +28,7 @@ jobs:
 
       - name: Build Projects
         run: |
-          modules="${{steps.list_modules.outputs.modules}}"
-          echo "Modules: $modules"
+          for module in ${{steps.list_modules.outputs.modules}}
+          do
+            echo "Building module: $module"
+          done
