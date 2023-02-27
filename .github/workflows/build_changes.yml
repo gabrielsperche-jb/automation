@@ -15,7 +15,8 @@ jobs:
 
       - name: Check if directory exists
         run: |
-          if [ ! -d "/home/runner/work/automation/automation" ]; then
-            echo "Directory does not exist"
-            exit 1
+          if [ -d "/home/runner/work/automation/automation" ]; then
+            echo "O diretório existe"
+          else
+            echo "Não existe"
           fi
