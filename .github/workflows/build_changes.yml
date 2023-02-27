@@ -1,7 +1,7 @@
 name: Build Changes
 
 on:
-  [push]
+  [ push ]
 
 jobs:
   listar-alteracoes:
@@ -15,5 +15,9 @@ jobs:
 
       - name: Listar Alterações
         run: |
-            check=$(git diff --name-only HEAD^ | grep -o ".*-automation\/" | uniq )
-            echo "Changes on ${check}"
+          check=$(git diff --name-only HEAD^ | grep -E ".*-connector/" | awk -F/ '{print $1}' | uniq)
+          if [ -n "$check" ]; then
+            echo "Changes on $check"
+          else
+            echo "No changes found"
+          fi
