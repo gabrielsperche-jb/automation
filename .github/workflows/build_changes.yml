@@ -17,7 +17,7 @@ jobs:
         run: |
           diretórios=$(git diff --name-only --diff-filter=d 7289931717ebe0c60841ccc6785c8dddbbc748d0 | sed 's!/.*!!' | sort -u)
           if [ -z "$diretórios" ]; then
-            echo "Não houve alterações em diretórios."
+            echo "Não houve alterações em dirtórios."
           else
             echo "As alterações foram feitas nos seguintes diretórios:"
             echo "$diretórios"
