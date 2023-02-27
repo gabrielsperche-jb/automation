@@ -5,7 +5,7 @@ public class Main {
     System.out.println("Axiliary Module!");
     int num = 9;
     int hnum = 99;
-    int hfnum = 120;
+    int hfnum = 10;
     String test = "";
   }
 }

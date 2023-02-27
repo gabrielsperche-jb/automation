@@ -29,4 +29,4 @@ jobs:
       - name: Build Projects
         run: |
           mvn --projects $(${{needs.list_modules.outputs.modules}} | tr '\n' ',') --also-make install
-          echo "Building the following modules: $(${{needs.list_modules.outputs.modules}} | tr '\n' ',')"
+          echo "Building the following modules: ${{needs.list_modules.outputs.modules}}"
