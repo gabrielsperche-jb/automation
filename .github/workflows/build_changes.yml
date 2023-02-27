@@ -11,18 +11,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check if directory exists
-        run: |
-          if [ ! -d "./test-01" ]; then
-            echo "Directory does not exist"
-            exit 1
-          fi
-
-      - name: List changed directories
-        run: |
-          check=$(git diff --name-only HEAD~1..HEAD)
-          if [ -n "$check" ]; then
-            echo "Directories modified in the last commit:"
-            echo "$check" | grep -o "^[^/]*" | sort -u
-          else
-            echo "No directories modified in the last commit."
-          fi
+        run: echo "O caminho do repositório é ${{ github.workspace }}"
