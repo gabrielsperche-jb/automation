@@ -21,7 +21,7 @@ jobs:
 
       - name: List Changed Modules
         run: |
-          git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniqmvn >> $GITHUB_OUTPUT
+          echo "git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniqmvn" >> $GITHUB_OUTPUT
         id: list_modules
 
       - name: Build Projects
