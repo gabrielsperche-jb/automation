@@ -26,4 +26,4 @@ jobs:
 
       - name: Build Projects
         run: |
-          mvn --projects ${{steps.list_modules.outputs.*}} --also-make install
+          mvn --projects ${{steps.list_modules.outputs}} --also-make install
