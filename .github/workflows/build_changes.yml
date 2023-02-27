@@ -1,27 +1,21 @@
-name: Build Changes
+name: List changed directories
 
-on:
-  [ push ]
+on: [push]
 
 jobs:
-  listar-alteracoes:
+  list-changed-directories:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do Repositório
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Listar Alterações
-        run: | 
-          git diff --name-only HEAD^
-
-#      - name: Listar Alterações
-#        run: |
-#          check=$(git diff --name-only HEAD^ | grep -E ".*-connector/" | awk -F/ '{print $1}' | uniq)
-#          if [ -n "$check" ]; then
-#            echo "Changes on $check"
-#          else
-#            echo "No changes found"
-#          fi
+      - name: List changed directories
+        run: |
+          check=$(git diff --name-only HEAD~1..HEAD)
+          if [ -n "$check" ]; then
+            echo "Directories modified in the last commit:"
+            echo "$check" | grep -o "^[^/]*" | sort -u
+          else
+            echo "No directories modified in the last commit."
+          fi
