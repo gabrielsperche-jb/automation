@@ -15,7 +15,7 @@ jobs:
 
       - name: Listar Diretórios Modificados
         run: |
-          diretórios=$(git diff --name-only --diff-filter=d faf920434dbde56a976423c0c3bfff29d87a2af3 | sed 's!/.*!!' | sort -u)
+          diretórios=$(git diff --name-only --diff-filter=d 7289931717ebe0c60841ccc6785c8dddbbc748d0 | sed 's!/.*!!' | sort -u)
           if [ -z "$diretórios" ]; then
             echo "Não houve alterações em diretórios."
           else
