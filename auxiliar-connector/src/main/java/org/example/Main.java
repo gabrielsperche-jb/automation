@@ -5,6 +5,5 @@ public class Main {
     System.out.println("Axiliary Module!");
     int num = 9;
     int hnum = 9;
-    int h5um = 9;
   }
 }
