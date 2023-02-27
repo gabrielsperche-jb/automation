@@ -14,5 +14,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Listar Alterações
-      - run: echo check=`git diff --name-only HEAD^ | grep -o ".*-automation\/" | uniq `
-      - run: echo "Chages on ${{check}}"
+        run: |
+            check=$(git diff --name-only HEAD^ | grep -o ".*-automation\/" | uniq )
+            echo "Changes on ${check}"
