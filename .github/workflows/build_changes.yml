@@ -12,4 +12,4 @@ jobs:
 
       - name: Listar diretórios modificados
         run: |
-          echo "Thats all changes ${{git diff --name-only HEAD}}"
+          echo "Thats all changes ${{ git diff --name-only HEAD }}"
