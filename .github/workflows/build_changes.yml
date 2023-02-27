@@ -12,4 +12,5 @@ jobs:
 
       - name: Listar diretórios modificados
         run: |
-          git diff --name-only origin/master...${{ github.event.pull_request.head.ref }} | sed 's|/.*||' | sort -u
+          git fetch origin master
+          git diff --name-only FETCH_HEAD...${{ github.event.pull_request.head.ref }} | sed 's|/.*||' | sort -u
