@@ -13,10 +13,12 @@ jobs:
           submodules: 'recursive'
           path: '/home/runner/work/automation/automation'
 
-      - name: Check if directory exists
+      - name: Listar Diretórios Modificados
         run: |
-          if [ -d "/home/runner/work/automation/automation" ]; then
-            echo "O diretório existe"
+          diretórios=$(git diff --name-only --diff-filter=d faf920434dbde56a976423c0c3bfff29d87a2af3 | sed 's!/.*!!' | sort -u)
+          if [ -z "$diretórios" ]; then
+            echo "Não houve alterações em diretórios."
           else
-            echo "Não existe"
+            echo "As alterações foram feitas nos seguintes diretórios:"
+            echo "$diretórios"
           fi
