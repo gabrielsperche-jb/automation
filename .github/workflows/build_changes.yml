@@ -12,7 +12,7 @@ jobs:
 
       - name: Check if directory exists
         run: |
-          if [ ! -d "./my-repo" ]; then
+          if [ ! -d "./test-01" ]; then
             echo "Directory does not exist"
             exit 1
           fi
