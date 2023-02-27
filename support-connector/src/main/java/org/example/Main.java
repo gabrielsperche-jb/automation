@@ -6,6 +6,5 @@ public class Main {
     int e = 4;
     int et = 4;
     int ennnt = 4;
-    int ennntf = 4;
   }
 }
