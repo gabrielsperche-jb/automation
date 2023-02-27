@@ -1,24 +1,15 @@
-name: Listar Diretórios Alterados
+name: Listar diretórios modificados em pull request
 
 on: [push]
 
 jobs:
-  listar-diretorios:
+  listar-diretorios-modificados:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do Repositório
+      - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-          path: '/home/runner/work/automation/automation'
 
-      - name: Listar Diretórios Modificados
+      - name: Listar diretórios modificados
         run: |
-          diretórios=$(git diff --name-only --diff-filter=d 7289931717ebe0c60841ccc6785c8dddbbc748d0 | sed 's!/.*!!' | sort -u)
-          if [ -z "$diretórios" ]; then
-            echo "Não houve alterações em dirtórios."
-          else
-            echo "As alterações foram feitas nos seguintes diretórios:"
-            echo "$diretórios"
-          fi
+          git diff --name-only origin/main...${{ github.event.pull_request.head.ref }} | sed 's|/.*||' | sort -u
