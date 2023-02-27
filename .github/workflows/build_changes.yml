@@ -14,5 +14,5 @@ jobs:
 
       - name: Listar diretórios modificados
         run: |
-          check = ${{ git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq }}
+          check = git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq
           echo "Name is: ${{check}}"
