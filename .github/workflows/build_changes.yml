@@ -23,6 +23,7 @@ jobs:
         run: |
           modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq)
           echo "::set-output name=modules::$modules"
+          echo "Modules changed: $modules"
         id: list_modules
 
       - name: Build Projects
