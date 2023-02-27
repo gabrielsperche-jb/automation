@@ -1,14 +1,19 @@
-name: List changed directories
+name: Listar Diretórios Alterados
 
 on: [push]
 
 jobs:
-  list-changed-directories:
+  listar-diretorios:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout do Repositório
         uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          path: '/home/runner/work/automation/automation'
 
-      - name: Check if directory exists
-        run: echo "O caminho do repositório é ${{ github.workspace }}"
+      - name: Listar Diretórios Alterados
+        run: |
+          cd /home/runner/work/automation/automation
+          git diff --name-only HEAD~1..HEAD | xargs -n 1 dirname | sort -u
