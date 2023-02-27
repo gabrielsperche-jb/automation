@@ -13,4 +13,7 @@ jobs:
       - name: Listar diretórios modificados
         run: |
           git fetch origin master
-          git diff --name-only $(git merge-base FETCH_HEAD ${{ github.event.pull_request.head.ref }})...${{ github.event.pull_request.head.ref }} | sed 's|/.*||' | sort -u
+          diretorios_modificados=$(git diff --name-only $(git merge-base FETCH_HEAD ${{ github.event.pull_request.head.ref }})...${{ github.event.pull_request.head.ref }} | sed 's|/.*||' | sort -u)
+          for dir in $diretorios_modificados; do
+            echo "Diretório modificado: $dir"
+          done
