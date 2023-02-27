@@ -3,7 +3,7 @@ name: Test
 on: [push]
 
 jobs:
-  listar-diretorios-modificados:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,4 +14,4 @@ jobs:
 
       - name: Listar diretórios modificados
         run: |
-          git diff --name-only HEAD
+          git diff --name-only HEAD^
