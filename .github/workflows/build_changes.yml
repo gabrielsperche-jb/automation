@@ -14,7 +14,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Listar Alterações
-        run: echo git diff --name-only HEAD^
+        run: | 
+          git diff --name-only HEAD^
 
 #      - name: Listar Alterações
 #        run: |
