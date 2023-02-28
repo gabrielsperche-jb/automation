@@ -22,11 +22,13 @@ jobs:
       - name: List Changed Modules
         id: list_modules
         run: |
-          modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',')
+          list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',')
           test="gabriel-rafa"
-          echo "Modules changed: $modules"
-          echo "MODULES=$test" >> $GITHUB_OUTPUT
+          echo "Modules changed: $list"
+          echo "test=$test" >> $GITHUB_OUTPUT
+          echo "modules=list" >> $GITHUB_OUTPUT
 
       - name: Build Projects
         run: |
-          echo "Modules to be built: ${{ steps.list_modules.outputs.MODULES }}"
+          echo "Modules to be built: ${{ steps.list_modules.outputs.modules }}"
+          echo "Test: ${{ steps.list_modules.outputs.test }}"
