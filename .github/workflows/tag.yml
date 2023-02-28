@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 99
 
       - name: Get latest release tag
         id: get_latest_release
