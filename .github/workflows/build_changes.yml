@@ -2,7 +2,7 @@ name: Build Changes
 
 on:
   pull_request:
-    types: [merged]
+    types: [closed]
 
 
 jobs:
