@@ -48,7 +48,6 @@ jobs:
         id: get_latest_release
         run: |
           # Checkout to master
-          git config pull.rebase true
           git pull origin develop
           
           # Fetch all tags from the repository.
