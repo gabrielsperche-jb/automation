@@ -17,6 +17,7 @@ jobs:
         run: |
           git fetch --tags 
           latest_tag=$(git describe --abbrev=0 --tags)
+          echo "last tag: $latest_tag"
           echo "new_tag=$latest_tag" >> $GITHUB_OUTPUT
 
       - name: Increment tag
