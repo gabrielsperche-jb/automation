@@ -41,5 +41,7 @@ jobs:
             mvn --projects $modules --also-make install
           fi
 
+      - name: Giving permission
+        run: chmod +x ./scripts/autotag.sh
       - name: Execute Auto Tag
         run: ./scripts/autotag.sh
