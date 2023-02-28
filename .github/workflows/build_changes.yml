@@ -24,7 +24,7 @@ jobs:
         run: |
           modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//')
           echo "Modules changed: $modules"
-          echo "MODULES={modules}" >> $GITHUB_OUTPUT
+          echo "MODULES=$modules" >> $GITHUB_OUTPUT
 
       - name: Build Projects
         run: |
