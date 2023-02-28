@@ -22,7 +22,7 @@ jobs:
       - name: List Changed Modules
         id: list_modules
         run: |
-          list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',')
+          list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
           test="gabriel-rafa"
           echo "Modules changed: $list"
           echo "test=$test" >> $GITHUB_OUTPUT
