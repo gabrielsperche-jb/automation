@@ -23,18 +23,17 @@ jobs:
       - name: Increment tag
         id: increment_tag
         run: |
-          echo "Base Tag: ${{ steps.get_latest_release.outputs.latest }}"
-          VERSION_BITS=($(echo "${{ steps.get_latest_release.outputs.latest_release }}" | tr '.' ' '))
+          VERSION_BITS=(${{ steps.get_latest_release.outputs.latest_release }}//./)
           VNUM1=${VERSION_BITS[0]}
           VNUM2=${VERSION_BITS[1]}
           VNUM3=${VERSION_BITS[2]}
           VNUM4=${VERSION_BITS[3]}
           VNUM4=$((VNUM4+1))
           NEW_TAG="$VNUM1.$VNUM2.$VNUM3.$VNUM4"
-          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
           echo "New created tag: $NEW_TAG"
 
-      - name: Create and push tag
+      - name: Tag commit with new tag
         run: |
           echo "Tagging with ${{ steps.increment_tag.outputs.new_tag }}"
           git config --local user.email "action@github.com"
