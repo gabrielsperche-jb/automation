@@ -26,7 +26,7 @@ jobs:
           test="gabriel-rafa"
           echo "Modules changed: $list"
           echo "test=$test" >> $GITHUB_OUTPUT
-          echo "modules=list" >> $GITHUB_OUTPUT
+          echo "modules=$list" >> $GITHUB_OUTPUT
 
       - name: Build Projects
         run: |
