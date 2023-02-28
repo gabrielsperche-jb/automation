@@ -40,3 +40,10 @@ jobs:
             echo "Building using: mvn --projects $modules --also-make install"
             mvn --projects $modules --also-make install
           fi
+
+      - name: Criar Tag de Release
+        run: |
+          git config --global user.email "meuemail@example.com"
+          git config --global user.name "Meu Nome"
+          git tag -a v1.0.0 -m "Minha tag de release"
+          git push origin v1.0.0

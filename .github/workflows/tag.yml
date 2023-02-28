@@ -1,0 +1,38 @@
+name: Auto tag
+
+on: [push]
+
+jobs:
+  auto-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get latest release tag
+        run: |
+          latestRelease=$(git describe --abbrev=0 --tags)
+          echo "Latest Release: $latestRelease"
+          echo "latest_release=$latestRelease" >> $GITHUB_OUTPUT
+        id: get_latest_release
+
+      - name: Increment tag
+        run: |
+          VERSION_BITS=(${{ steps.get_latest_release.outputs.latest_release }}//./)
+          VNUM1=${VERSION_BITS[0]}
+          VNUM2=${VERSION_BITS[1]}
+          VNUM3=${VERSION_BITS[2]}
+          VNUM4=${VERSION_BITS[3]}
+          VNUM4=$((VNUM4+1))
+          NEW_TAG="$VNUM1.$VNUM2.$VNUM3.$VNUM4"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+        id: increment_tag
+
+      - name: Create and push tag
+        run: |
+          echo "Tagging with ${{ steps.increment_tag.outputs.new_tag }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag ${{ steps.increment_tag.outputs.new_tag }}
+          git push origin ${{ steps.increment_tag.outputs.new_tag }}
