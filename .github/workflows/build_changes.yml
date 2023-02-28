@@ -48,7 +48,7 @@ jobs:
         id: get_latest_release
         run: |
           # Checkout to master
-          git status
+          git fetch origin
           
           # Fetch all tags from the repository.
           git fetch --tags 
