@@ -20,11 +20,11 @@ jobs:
           fetch-depth: 2
 
       - name: List Changed Modules
+        id: list_modules
         run: |
           modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq)
-          echo "modules=$modules" >> $GITHUB_OUTPUT
+          echo "::set-output name=modules::$modules"
           echo "Modules changed: $modules"
-        id: list_modules
 
       - name: Build Projects
         run: |
