@@ -14,9 +14,8 @@ jobs:
 
       - name: Get latest release tag
         run: |
-          git pull
           git fetch --tags
-          latestRelease=$(git describe --abbrev=0 --tags --always)
+          latestRelease=$(git describe --abbrev=0 --tags)
           echo "Latest Release: $latestRelease"
           echo "latest_release=$latestRelease" >> $GITHUB_OUTPUT
         id: get_latest_release
