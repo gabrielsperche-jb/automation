@@ -23,7 +23,7 @@ jobs:
       - name: Increment tag
         id: increment_tag
         run: |
-          version=${{ steps.get_latest_release.outputs.latest_release }}
+          version=${{ steps.get_latest_release.outputs.latest }}
           echo "Updating tag: $version"
           IFS='.' read -ra arr <<< "$version"
           last=${arr[-1]}
