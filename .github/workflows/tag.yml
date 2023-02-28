@@ -23,8 +23,8 @@ jobs:
       - name: Increment tag
         id: increment_tag
         run: |
-          echo "Base Tag: ${{ steps.get_latest_release.outputs.latest_release }}"
-          VERSION_BITS=(${{ steps.get_latest_release.outputs.latest_release }}//./)
+          echo "Base Tag: ${{ steps.get_latest_release.outputs.new_tag }}"
+          VERSION_BITS=(${{ steps.get_latest_release.outputs.new_tag }}//./)
           VNUM1=${VERSION_BITS[0]}
           VNUM2=${VERSION_BITS[1]}
           VNUM3=${VERSION_BITS[2]}
