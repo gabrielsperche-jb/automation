@@ -1,6 +1,9 @@
 name: Build Changes
 
-on: [push]
+on:
+  pull_request:
+    types: [merged]
+
 
 jobs:
   test:
@@ -41,7 +44,54 @@ jobs:
             mvn --projects $modules --also-make install
           fi
 
-      - name: Giving permission
-        run: chmod +x ./scripts/autotag.sh
-      - name: Execute Auto Tag
-        run: ./scripts/autotag.sh
+      # Get the latest release tag from the repository.
+      - name: Get latest release tag
+        if: success()
+        id: get_latest_release
+        run: |
+          # Fetch all tags from the repository.
+          git fetch --tags 
+          
+          # Get the latest release tag.
+          latest_tag=$(git describe --abbrev=0 --tags)
+          echo "Last Tag: $latest_tag"
+          
+          # Set an output variable for the latest tag.
+          echo "latest=$latest_tag" >> $GITHUB_OUTPUT
+
+      # Increment the latest release tag.
+      - name: Increment tag
+        id: increment_tag
+        run: |
+          # Get the latest release tag from the output variable of the previous step.
+          version=${{ steps.get_latest_release.outputs.latest }}
+          echo "Updating tag: $version"
+          
+          # Split the tag into an array of version numbers.
+          IFS='.' read -ra arr <<< "$version"
+          
+          # Increment the last version number.
+          last=${arr[-1]}
+          ((last++))
+          arr[-1]=$last
+          
+          # Combine the version numbers into a new tag.
+          new_version=$(IFS='.'; echo "${arr[*]}")
+          echo "New version: $new_version"
+          
+          # Set an output variable for the new tag.
+          echo "new_tag=$new_version" >> $GITHUB_OUTPUT
+
+      # Tag the latest commit with the new tag.
+      - name: Tag commit with new tag
+        run: |
+          # Get the new tag from the output variable of the previous step.
+          echo "Tagging with ${{ steps.increment_tag.outputs.new_tag }}"
+          
+          # Set the email and name for the Git commit.
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Create a new tag and push it to the repository.
+          git tag ${{ steps.increment_tag.outputs.new_tag }}
+          git push origin ${{ steps.increment_tag.outputs.new_tag }}
