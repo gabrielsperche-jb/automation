@@ -14,7 +14,6 @@ jobs:
 
       - name: Get latest release tag
         run: |
-          git checkout master
           git fetch --tags
           git describe --tags
 
