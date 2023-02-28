@@ -20,7 +20,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       # Find the modules that have changed
       - name: List Changed Modules
