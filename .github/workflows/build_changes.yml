@@ -1,8 +1,6 @@
 name: Build Changes
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
 
 
 jobs:
@@ -49,6 +47,9 @@ jobs:
         if: success()
         id: get_latest_release
         run: |
+          # Checkout to master
+          git checkout master
+          
           # Fetch all tags from the repository.
           git fetch --tags 
           
@@ -58,6 +59,9 @@ jobs:
           
           # Set an output variable for the latest tag.
           echo "latest=$latest_tag" >> $GITHUB_OUTPUT
+          
+          # Back to the current branch
+          git checkout -
 
       # Increment the latest release tag.
       - name: Increment tag
