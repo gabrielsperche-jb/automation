@@ -24,12 +24,8 @@ jobs:
         run: |
           modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq)
           echo "Modules changed: $modules"
-          echo "::set-env name=MODULES::$modules"
+          echo "MODULES=$modules" >> $GITHUB_ENV
 
       - name: Build Projects
         run: |
-          echo "Modules to be built: $MODULES"
-          for module in $MODULES
-          do
-            echo "Building module: $module"
-          done
+          echo "Modules to be built: ${{ env.MODULES }}"
