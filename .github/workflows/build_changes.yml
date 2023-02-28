@@ -29,5 +29,5 @@ jobs:
       - name: Build Projects
         run: |
           echo "Modules to be built: ${{ steps.list_modules.outputs.modules }}"
-          echo "Building using mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install"
+          echo "Building using: mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install"
           mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install
