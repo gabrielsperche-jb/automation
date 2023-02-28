@@ -1,8 +1,6 @@
 name: Auto Tag
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
 
 jobs:
   auto-tag:
@@ -16,6 +14,7 @@ jobs:
 
       - name: Get latest release tag
         run: |
+          git pull
           git fetch --tags
           latestRelease=$(git describe --abbrev=0 --tags --always)
           echo "Latest Release: $latestRelease"
