@@ -23,12 +23,11 @@ jobs:
         id: list_modules
         run: |
           list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
-          test="gabriel-rafa"
           echo "Modules changed: $list"
-          echo "test=$test" >> $GITHUB_OUTPUT
           echo "modules=$list" >> $GITHUB_OUTPUT
 
       - name: Build Projects
         run: |
           echo "Modules to be built: ${{ steps.list_modules.outputs.modules }}"
-          echo "Test: ${{ steps.list_modules.outputs.test }}"
+          echo "Building using mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install"
+          mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install
