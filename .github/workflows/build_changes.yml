@@ -47,9 +47,10 @@ jobs:
         if: success()
         id: get_latest_release
         run: |
+          git branch --list --remote
+          
           # Checkout to master
-          git config pull.ff only
-          git pull origin develop
+          git checkout develop
           
           # Fetch all tags from the repository.
           git fetch --tags 
