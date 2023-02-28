@@ -1,8 +1,7 @@
 name: Build Changes
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,3 +40,6 @@ jobs:
             echo "Building using: mvn --projects $modules --also-make install"
             mvn --projects $modules --also-make install
           fi
+
+      - name: Execute Auto Tag
+        run: ./scripts/autotag.sh
