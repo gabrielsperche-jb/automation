@@ -23,15 +23,15 @@ jobs:
       - name: Increment tag
         id: increment_tag
         run: |
-          VERSION_BITS=(${{ steps.get_latest_release.outputs.latest_release }}//./)
-          VNUM1=${VERSION_BITS[0]}
-          VNUM2=${VERSION_BITS[1]}
-          VNUM3=${VERSION_BITS[2]}
-          VNUM4=${VERSION_BITS[3]}
-          VNUM4=$((VNUM4+1))
-          NEW_TAG="$VNUM1.$VNUM2.$VNUM3.$VNUM4"
-          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
-          echo "New created tag: $NEW_TAG"
+          version=${{ steps.get_latest_release.outputs.latest_release }}
+          echo "Updating tag: $version"
+          IFS='.' read -ra arr <<< "$version"
+          last=${arr[-1]}
+          ((last++))
+          arr[-1]=$last
+          new_version=$(IFS='.'; echo "${arr[*]}")
+          echo "New version: $new_version"
+          echo "new_tag=$new_version" >> $GITHUB_OUTPUT
 
       - name: Tag commit with new tag
         run: |
