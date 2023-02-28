@@ -7,8 +7,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: Get latest release tag
         run: |
