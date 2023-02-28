@@ -1,29 +1,47 @@
-name: Build e Teste com Maven
+name: Build Changes
 
-on:
-  pull_request:
-    types: [opened, synchronize]
+on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Identify module
-        id: find-module
-        run: |
-          CHANGED_MODULES=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep -E '^pom.xml$' | xargs dirname | sort | uniq)
-          echo "::set-output name=changed_modules::$CHANGED_MODULES"
-
-      - name: Environment Configuration
+      # Set up the Java environment
+      - name: Preparing Environment
         uses: actions/setup-java@v1
         with:
           java-version: '8.0.192'
           java-package: jdk
           architecture: x64
 
-      - name: Build
-        run: mvn -B -T 4C clean install -pl ${{ steps.find-module.outputs.changed_modules }}
+      # Checkout the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      # Find the modules that have changed
+      - name: List Changed Modules
+        id: list_modules
+        run: |
+          list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
+          echo "Modules changed: $list"
+          echo "modules=$list" >> $GITHUB_OUTPUT
+
+      # Build the changed modules using Maven
+      - name: Build Projects
+        run: |
+          modules="${{ steps.list_modules.outputs.modules }}"
+          if [ -z "$modules" ]; then
+            echo "No changes in modules. Skipping build."
+          else
+            echo "Modules to be built: $modules"
+            echo "Building using: mvn --projects $modules --also-make install"
+            mvn --projects $modules --also-make install
+          fi
+
+      - name: Giving permission
+        run: chmod +x ./scripts/autotag.sh
+      - name: Execute Auto Tag
+        run: ./scripts/autotag.sh
