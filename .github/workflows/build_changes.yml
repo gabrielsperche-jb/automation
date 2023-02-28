@@ -10,9 +10,9 @@ jobs:
       - name: Preparing Environment
         uses: actions/setup-java@v1
         with:
-          java-version: '8.0.192' # The JDK version to make available on the path. Takes a whole or semver JDK version, or 1.x syntax (e.g. 1.8 => Jdk 8.x). To specify a specific version for JDK 8 or older use the following pattern (8.0.x)
-          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
-          architecture: x64 # (x64 or x86) - defaults to x64
+          java-version: '8.0.192'
+          java-package: jdk
+          architecture: x64
 
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -28,7 +28,9 @@ jobs:
 
       - name: Build Projects
         run: |
-          for module in ${{steps.list_modules.outputs.modules}}
+          echo "Modules to be built: ${steps.list_modules.outputs.modules}"
+          for module in ${steps.list_modules.outputs.modules}
           do
             echo "Building module: $module"
+            # comando de compilação para cada módulo aqui
           done
