@@ -24,7 +24,7 @@ jobs:
         id: increment_tag
         run: |
           echo "Base Tag: ${{ steps.get_latest_release.outputs.latest }}"
-          VERSION_BITS=$(echo "${{ steps.get_latest_release.outputs.latest }}" | awk -F. '{printf "%d.%d.%d.%d",$1,$2,$3,$4}')
+          VERSION_BITS=($(echo "${{ steps.get_latest_release.outputs.latest_release }}" | tr '.' ' '))
           VNUM1=${VERSION_BITS[0]}
           VNUM2=${VERSION_BITS[1]}
           VNUM3=${VERSION_BITS[2]}
