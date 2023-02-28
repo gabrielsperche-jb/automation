@@ -23,13 +23,13 @@ jobs:
         id: list_modules
         run: |
           modules=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq)
-          echo "::set-output name=modules::$modules"
           echo "Modules changed: $modules"
+          echo "::set-env name=MODULES::$modules"
 
       - name: Build Projects
         run: |
-          echo "Modules to be built: ${{steps.list_modules.outputs.modules}}"
-          for module in ${{steps.list_modules.outputs.modules}}
+          echo "Modules to be built: $MODULES"
+          for module in $MODULES
           do
             echo "Building module: $module"
           done
