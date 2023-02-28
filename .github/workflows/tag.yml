@@ -15,9 +15,8 @@ jobs:
       - name: Get latest release tag
         run: |
           git fetch --tags
-          latestRelease=$(git describe --abbrev=0 --tags)
-          echo "Latest Release: $latestRelease"
-          echo "latest_release=$latestRelease" >> $GITHUB_OUTPUT
+          git describe --tags
+
         id: get_latest_release
 
       - name: Increment tag
