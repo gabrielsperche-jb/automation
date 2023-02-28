@@ -30,7 +30,7 @@ jobs:
           VNUM4=$((VNUM4+1))
           NEW_TAG="$VNUM1.$VNUM2.$VNUM3.$VNUM4"
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
-          echo "New created tag: $new_tag"
+          echo "New created tag: $NEW_TAG"
         id: increment_tag
 
       - name: Create and push tag
