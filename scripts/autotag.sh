@@ -17,7 +17,7 @@ usage() {
 }
 
 
-findLatestReleaseTag(){ latestRelease=`git describe --abbrev=0 --tags`; }
+findLatestReleaseTag(){ latestRelease=`git describe --abbrev=0 --tags --always`; }
 
 
 getNewVersion() {
