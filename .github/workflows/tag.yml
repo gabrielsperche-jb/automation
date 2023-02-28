@@ -13,13 +13,14 @@ jobs:
           fetch-depth: 2
 
       - name: Get latest release tag
+        id: get_latest_release
         run: |
           git fetch --tags
-          git describe --tags
-
-        id: get_latest_release
+          latest_tag=$(git describe --abbrev=0 --tags)
+          echo "new_tag=$latest_tag" >> $GITHUB_OUTPUT
 
       - name: Increment tag
+        id: increment_tag
         run: |
           VERSION_BITS=(${{ steps.get_latest_release.outputs.latest_release }}//./)
           VNUM1=${VERSION_BITS[0]}
@@ -30,7 +31,6 @@ jobs:
           NEW_TAG="$VNUM1.$VNUM2.$VNUM3.$VNUM4"
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New created tag: $NEW_TAG"
-        id: increment_tag
 
       - name: Create and push tag
         run: |
