@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Set up the Java environment
       - name: Preparing Environment
         uses: actions/setup-java@v1
         with:
@@ -14,11 +15,13 @@ jobs:
           java-package: jdk
           architecture: x64
 
+      # Checkout the code from the repository
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
+      # Find the modules that have changed
       - name: List Changed Modules
         id: list_modules
         run: |
@@ -26,8 +29,14 @@ jobs:
           echo "Modules changed: $list"
           echo "modules=$list" >> $GITHUB_OUTPUT
 
+      # Build the changed modules using Maven
       - name: Build Projects
         run: |
-          echo "Modules to be built: ${{ steps.list_modules.outputs.modules }}"
-          echo "Building using: mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install"
-          mvn --projects ${{ steps.list_modules.outputs.modules }} --also-make install
+          modules="${{ steps.list_modules.outputs.modules }}"
+          if [ -z "$modules" ]; then
+            echo "No changes in modules. Skipping build."
+          else
+            echo "Modules to be built: $modules"
+            echo "Building using: mvn --projects $modules --also-make install"
+            mvn --projects $modules --also-make install
+          fi
