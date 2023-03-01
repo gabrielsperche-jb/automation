@@ -42,11 +42,11 @@ jobs:
             filesPath+=$(ls -1 ./$name/target/*.jar)
           done
           
-          echo "Filenames array output: ${fileNames[@]}"
+          echo "Filenames array output1: ${fileNames[0]}"
+          echo "Filenames array output2: ${fileNames[1]}"
           echo "Path array output: ${filesPath[@]}"
           
-          echo "jarName1:$fileNames[0]"  >> $GITHUB_OUTPUT
-          echo "jarName2:$fileNames[1]"  >> $GITHUB_OUTPUT
+          echo "jarName:$fileNames[0]"  >> $GITHUB_OUTPUT
           echo "jarPath:$filesPath[*]"  >> $GITHUB_OUTPUT
           
           echo "Name output: $jarName"
