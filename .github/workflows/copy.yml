@@ -52,4 +52,4 @@ jobs:
           username: gabriel.goncalves
           password: Netgear01@#!$
           localDir: './auxiliar-connector/target/releaseTest'
-          remoteDir: './Builds/connectors/CDATA/test'
+          remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
