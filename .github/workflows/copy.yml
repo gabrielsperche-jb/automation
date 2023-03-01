@@ -42,4 +42,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /gabriel.goncalves/
-          local-dir: /auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}.jar/
+          local-dir: /auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}/
