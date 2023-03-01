@@ -32,6 +32,8 @@ jobs:
         id: ftp_files
         run: |
           file=$(ls -1 ./auxiliar-connector/target/*.jar | xargs basename)
+          path=$(ls -1 ./auxiliar-connector/target/*.jar)
+          echo "Path: $path"
           echo "Filename: $file"
           echo "files=$file" >> $GITHUB_OUTPUT
 
