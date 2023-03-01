@@ -31,17 +31,30 @@ jobs:
       - name: FTP
         id: ftp_files
         run: |
-          file=$(ls -1 ./auxiliar-connector/target/*.jar | xargs basename)
-          path=$(ls -1 ./auxiliar-connector/target/*.jar)
-          echo "full_path=$path" >> $GITHUB_OUTPUT
-          echo "Filename: $file"
-          echo "files=$file" >> $GITHUB_OUTPUT
+          modules="auxiliar-connector,support-connector"
+          IFS=',' read -ra modules_array <<< "$modules"
+          fileNames=()
+          filesPath=()
+          for name in "${modules[@]}"
+          do
+            fileNames=$(ls -1 ./name/target/*.jar | xargs basename)
+            filesPath=$(ls -1 ./name/target/*.jar)
+          done
+          
+          echo "${fileNames[@]}"
+          echo "${filesPath[@]}"
+          
+          echo "jarName:$fileNames" >> $GITHUB_OUTPUT
+          echo "jarPath:filesPath"  >> $GITHUB_OUTPUT
+          
+          echo "$jarName"
+          echo "$jarPath"
 
-      - name: Criar pasta dentro de target
+      - name: Create a folder with jar files
         run: |
           ls ./auxiliar-connector
           mkdir -p ./auxiliar-connector/target/releaseTest
-          mv ${{steps.ftp_files.outputs.full_path}} ./auxiliar-connector/target/releaseTest/
+          mv -f ${{steps.ftp_files.outputs.full_path}} ./auxiliar-connector/target/releaseTest/
           ls -l ./auxiliar-connector/target/releaseTest/
 
       - name: Upload files to ftp server
