@@ -28,14 +28,14 @@ jobs:
           mvn -q clean
           mvn -q --projects auxiliar-connector,support-connector --also-make install
 
-      - name: FTP
+      - name: Retrieve Filename and Path
         id: ftp_files
         run: |
           modules="auxiliar-connector,support-connector"
           IFS=',' read -ra modules_array <<< "$modules"
           fileNames=()
           filesPath=()
-          for name in "${modules[@]}"
+          for name in "${modules_array[@]}"
           do
             fileNames=$(ls -1 ./$name/target/*.jar | xargs basename)
             filesPath=$(ls -1 ./$name/target/*.jar)
