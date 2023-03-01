@@ -46,8 +46,8 @@ jobs:
           echo "Filenames array output2: ${fileNames[1]}"
           echo "Path array output: ${filesPath[@]}"
           
-          echo "jarName:$fileNames[*]"  >> $GITHUB_OUTPUT
-          echo "jarPath:$filesPath[*]"  >> $GITHUB_OUTPUT
+          echo "jarName:${fileNames[*]}"  >> $GITHUB_OUTPUT
+          echo "jarPath:${filesPath[*]}"  >> $GITHUB_OUTPUT
           
           echo "Name output: $jarName"
           echo "Path output: $jarPath"
