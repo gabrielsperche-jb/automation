@@ -38,12 +38,12 @@ jobs:
           echo "files=$file" >> $GITHUB_OUTPUT
 
       - name: Upload files to ftp server
-        uses: ./
+        uses: dennisameling/ftp-upload-action@v1
         id: upload-to-ftp
         with:
           files: ${{ steps.ftp_files.outputs.files }}
-          ftpUsername: ${{ secrets.FTP_USERNAME }}
-          ftpPassword: ${{ secrets.FTP_PASSWORD }}
-          ftpHostname: ${{ secrets.FTP_SERVER }}
-          src: ./auxiliar-connector/target
-          dest: '/gabriel.goncalves'
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          local-dir: ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}/
+          server_dir: '/gabriel.goncalves'
