@@ -1,6 +1,6 @@
 name: Build Changes
 
-on: [closed]
+on: [pull]
 
 
 jobs:
