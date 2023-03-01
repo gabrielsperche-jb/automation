@@ -40,7 +40,7 @@ jobs:
       - name: Criar pasta dentro de target
         run: |
           mkdir target/releaseTest
-          mv ${{steps.ftp_files.outputs.full_path}} target/releaseTest/
+          mv ${{steps.ftp_files.outputs.full_path}} ./auxiliar-connector/target/releaseTest/
           ls -l releaseTest
 
       - name: Upload files to ftp server
