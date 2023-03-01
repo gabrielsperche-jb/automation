@@ -37,11 +37,13 @@ jobs:
           echo "Filename: $file"
           echo "files=$file" >> $GITHUB_OUTPUT
 
-      - name: Upload JAR files to FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      - name: Upload files to ftp server
+        uses: ./
+        id: upload-to-ftp
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /gabriel.goncalves/
-          local-dir: ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}/
+          files: ${{ steps.ftp_files.outputs.files }}
+          ftpUsername: ${{ secrets.FTP_USERNAME }}
+          ftpPassword: ${{ secrets.FTP_PASSWORD }}
+          ftpHostname: ${{ secrets.FTP_SERVER }}
+          src: ./auxiliar-connector/target
+          dest: '/gabriel.goncalves'
