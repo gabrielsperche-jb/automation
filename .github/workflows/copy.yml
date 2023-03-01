@@ -54,6 +54,7 @@ jobs:
 
       - name: Create a folder with jar files
         run: |
+          echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
           ls ./auxiliar-connector
           mkdir -p ./auxiliar-connector/target/releaseTest
           mv -f ${{steps.ftp_files.outputs.full_path}} ./auxiliar-connector/target/releaseTest/
