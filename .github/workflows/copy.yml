@@ -44,5 +44,5 @@ jobs:
           host: reposit.jitterbit.com
           username: gabriel.goncalves
           password: Netgear01@#!$
-          localDir: './auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}'
+          localDir: './auxiliar-connector/target'
           remoteDir: './Builds/connectors/CDATA/test'
