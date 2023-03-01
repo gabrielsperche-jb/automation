@@ -1,4 +1,4 @@
-name: Build Changes
+name: Upload File
 
 on: [push]
 
@@ -38,12 +38,12 @@ jobs:
           echo "files=$file" >> $GITHUB_OUTPUT
 
       - name: Upload files to ftp server
-        uses: dennisameling/ftp-upload-action@v1
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         id: upload-to-ftp
         with:
           files: ${{ steps.ftp_files.outputs.files }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server: ${{ secrets.FTP_SERVER }}
-          local-dir: ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}/
+          local-dir: ./auxiliar-connector/target/
           server_dir: '/gabriel.goncalves'
