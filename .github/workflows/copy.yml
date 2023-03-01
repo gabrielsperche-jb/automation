@@ -46,4 +46,4 @@ jobs:
           server: reposit.jitterbit.com
           port: 22
           uploads: |
-            ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }} => /gabriel.goncalves/
+            ./auxiliar-connector/target/ => ./gabriel.goncalves/
