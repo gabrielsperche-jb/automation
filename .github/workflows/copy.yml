@@ -33,6 +33,7 @@ jobs:
         run: |
           modules="auxiliar-connector,support-connector"
           IFS=',' read -ra modules_array <<< "$modules"
+          echo "First output array: ${modules_array[@]}
           fileNames=()
           filesPath=()
           for name in "${modules_array[@]}"
@@ -44,8 +45,8 @@ jobs:
           echo "Filenames array output: ${fileNames[@]}"
           echo "Path array output: ${filesPath[@]}"
           
-          echo "jarName:$fileNames" >> $GITHUB_OUTPUT
-          echo "jarPath:filesPath"  >> $GITHUB_OUTPUT
+          echo "jarName:$fileNames[*]"  >> $GITHUB_OUTPUT
+          echo "jarPath:$filesPath[*]"  >> $GITHUB_OUTPUT
           
           echo "Name output: $jarName"
           echo "Path output: $jarPath"
