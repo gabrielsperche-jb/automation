@@ -35,14 +35,14 @@ jobs:
           echo "files=$names" >> $GITHUB_OUTPUT
 
       - name: Upload JAR files to FTP
-        uses: samuelmeuli/ftp-upload-action@v3
+        uses: SamKirkland/FTP-Deploy-Action@4.1.1
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          remote_path: /gabriel.goncalves
-          local-path: |
-            {% for file in steps.ftp_files.outputs.files.split(",") %}
+          server-dir: /gabriel.goncalves
+          local-dir: |
+            {% for file in fromJSON(steps.ftp_files.outputs.files).split(',') %}
             ./{{ file }}/target/*.jar
             {% endfor %}
           needs: ftp_files
