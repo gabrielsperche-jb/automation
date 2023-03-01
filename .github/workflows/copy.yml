@@ -31,7 +31,7 @@ jobs:
       - name: FTP
         id: ftp_files
         run: |
-          file=(ls -1 ./auxiliar-connector/target/*.jar | xargs basename)
+          file=$(ls -1 ./auxiliar-connector/target/*.jar | xargs basename)
           echo "files=file" >> $GITHUB_OUTPUT
 
       - name: Upload JAR files to FTP
