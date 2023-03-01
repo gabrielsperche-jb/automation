@@ -45,4 +45,4 @@ jobs:
           username: gabriel.goncalves
           password: Netgear01@#!$
           localDir: './auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}'
-          remoteDir: './gabriel.goncalves'
+          remoteDir: './Builds/connectors/CDATA/test'
