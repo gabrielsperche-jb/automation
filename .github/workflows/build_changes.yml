@@ -39,8 +39,8 @@ jobs:
             echo "No changes in modules. Skipping build."
           else
             echo "Modules to be built: $modules"
-            echo "Building using: mvn --projects $modules --also-make install"
-            mvn --projects $modules --also-make install
+            echo "Building using: mvn -q --projects $modules --also-make install"
+            mvn -q --projects $modules --also-make install
           fi
 
       # Get the latest release tag from the repository.
