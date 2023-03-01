@@ -41,9 +41,8 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         id: upload-to-ftp
         with:
-          files: ${{ steps.ftp_files.outputs.files }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server: ${{ secrets.FTP_SERVER }}
+          username: gabriel.goncalves
+          password: Netgear01@#!$
+          server: reposit.jitterbit.com
           local-dir: ./auxiliar-connector/target/
           server_dir: '/gabriel.goncalves'
