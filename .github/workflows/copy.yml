@@ -49,8 +49,8 @@ jobs:
           echo ::set-output name=jarName::"${fileNames[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
           
-          echo "Name output: $jarName"
-          echo "Path output: $jarPath"
+          echo "Name output: ${jarName[@]}"
+          echo "Path output: ${jarPath[@]}"
 
       - name: Create a folder with jar files
         run: |
