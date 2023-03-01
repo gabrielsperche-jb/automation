@@ -48,7 +48,7 @@ jobs:
           echo "jarPath:filesPath"  >> $GITHUB_OUTPUT
           
           echo "Name output: $jarName"
-          echo Path output: "$jarPath"
+          echo "Path output: $jarPath"
 
       - name: Create a folder with jar files
         run: |
