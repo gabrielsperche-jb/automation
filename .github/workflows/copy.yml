@@ -41,14 +41,14 @@ jobs:
             filesPath=$(ls -1 ./$name/target/*.jar)
           done
           
-          echo "${fileNames[@]}"
-          echo "${filesPath[@]}"
+          echo "Filenames array output: ${fileNames[@]}"
+          echo "Path array output: ${filesPath[@]}"
           
           echo "jarName:$fileNames" >> $GITHUB_OUTPUT
           echo "jarPath:filesPath"  >> $GITHUB_OUTPUT
           
-          echo "$jarName"
-          echo "$jarPath"
+          echo "Name output: $jarName"
+          echo Path output: "$jarPath"
 
       - name: Create a folder with jar files
         run: |
