@@ -43,7 +43,7 @@ jobs:
         with:
           username: gabriel.goncalves
           password: Netgear01@#!$
-          server: reposit.jitterbit.com
-          port: 22
-          uploads: |
-            ./auxiliar-connector/target/ => ./gabriel.goncalves/
+          host: reposit.jitterbit.com
+          compress: true
+          remoteDir: /gabriel.goncalves
+          local-dir: ./auxiliar-connector/target
