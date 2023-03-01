@@ -1,6 +1,6 @@
 name: Build Changes
 
-on: [push]
+on: [closed]
 
 
 jobs:
@@ -48,7 +48,6 @@ jobs:
         if: success()
         id: get_latest_release
         run: |
-          git branch --list --remote
           
           # Checkout to master
           git checkout develop

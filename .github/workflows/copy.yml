@@ -1,97 +1,33 @@
-name: Copy to Reposit
+name: Build Changes
 
 on: [push]
 
+
 jobs:
-  copy-to-reposit:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      # Set up the Java environment
+      - name: Preparing Environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.0.192'
+          java-package: jdk
+          architecture: x64
+
+      # Checkout the code from the repository
+      - name: Checkout Code
         uses: actions/checkout@v2
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.x
-
-      - name: Install Dependencies
-        run: npm ci
-
       - name: Build
-        run: npm run build
-
-      - name: Copy to Reposit
         run: |
-          #!/bin/bash
+          mvn -q --projects auxiliar-connector --also-make install
 
-          # Usage:
-          #  %copy_to_reposit.sh <branch_name> [<sftp_user> <sftp_pass>]
-          #
-          # Copy tarball to reposit - this requires to run build.sh script first in order to setup
-          # the environment variable BRANCH_RELEASE_VERSION|RELEASE_VERSION and VERSION
-          usage() {
-            echo "       "
-            echo " Usage:"
-            echo "    %copy_to_reposit.sh <branch_name> [<sftp_user> <sftp_pass>]"
-            echo "       "
-            exit 1
-          }
-
-
-          # Notes:
-          # Setup version based on branch
-          # if the branch name is release-8.18.10 - then the RELEASE_VERSION will be 8.18.10
-          # otherwise empty string
-          # if we are dealing with main branch then the version used will be the on from "package.json"
-          #
-          setupEnvVariables() {
-            # Verify that this is a release branch and extract the version number
-            # It expected that the release branch name will be release-8.18.10
-            export BRANCH_RELEASE_VERSION=$(echo $BRANCH_NAME | sed 's/release-//g')
-          
-            if [ "$BRANCH_NAME" != "$BRANCH_RELEASE_VERSION" ]; then
-              export RELEASE_VERSION=$BRANCH_RELEASE_VERSION
-            fi
-
-            echo "(setupVersion) BRANCH_RELEASE_VERSION|RELEASE_VERSION: $BRANCH_RELEASE_VERSION"
-
-            if [ "$RELEASE_VERSION" == "" ]; then
-              export VERSION=main
-            else
-              export VERSION=$RELEASE_VERSION
-            fi
-            echo "Version: $VERSION"
-          
-          
-            # grab first 3 numbers X.X.X
-            IFS='.' read -ra version <<< "$BRANCH_RELEASE_VERSION"
-            BRANCH_RELEASE_VERSION="${version[0]}.${version[1]}.${version[2]}"
-          
-          }
-
-          BRANCH_NAME=$GITHUB_REF
-          setupEnvVariables
-          FTP_USER=$1
-          FTP_PASSWORD=$2
-          echo "(copy_to_reposit.sh) BRANCH_RELEASE_VERSION: $BRANCH_RELEASE_VERSION"
-          echo "(copy_to_reposit.sh) RELEASE_VERSION: $RELEASE_VERSION"
-          echo "(copy_to_reposit.sh) VERSION: $VERSION"
-          echo "(copy_to_reposit.sh) BRANCH_NAME: $BRANCH_NAME"
-          echo "(copy_to_reposit.sh) FTP_USER: $FTP_USER"
-
-          if [[ $BRANCH_NAME =~ release-.* ]]; then
-            DESTINATION=/releases/2019/$BRANCH_RELEASE_VERSION/Connectors
-            echo Destination=$DESTINATION
-          else 
-            DESTINATION=/features/$BRANCH_NAME/Connectors
-            echo Destination=$DESTINATION
-          fi
-
-          if [ _"$FTP_USER" == "_" ]; then
-            FTP_USER=$SFTP_USER
-          fi
-
-          if [ _"$FTP_PASSWORD" == "_" ]; then
-            FTP_PASSWORD
+      - name: FTP
+        run: |
+          echo ${{ secrets.FTP_USERNAME }}
+          ls ./auxiliar-connector/target/*.jar
