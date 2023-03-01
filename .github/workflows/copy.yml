@@ -37,8 +37,8 @@ jobs:
           filesPath=()
           for name in "${modules[@]}"
           do
-            fileNames=$(ls -1 ./name/target/*.jar | xargs basename)
-            filesPath=$(ls -1 ./name/target/*.jar)
+            fileNames=$(ls -1 ./${{name}}/target/*.jar | xargs basename)
+            filesPath=$(ls -1 ./${{name}}/target/*.jar)
           done
           
           echo "${fileNames[@]}"
