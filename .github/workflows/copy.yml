@@ -30,4 +30,5 @@ jobs:
       - name: FTP
         run: |
           echo ${{ secrets.FTP_PASSWORD }}
-          ls -1 ./auxiliar-connector/target/*.jar
+          jarfile=$(ls -1 ./auxiliar-connector/target/*.jar)
+          echo "Filename: $jarfile"
