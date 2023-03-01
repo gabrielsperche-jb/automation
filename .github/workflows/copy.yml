@@ -44,5 +44,5 @@ jobs:
           host: reposit.jitterbit.com
           username: gabriel.goncalves
           password: Netgear01@#!$
-          local_path: ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}
-          remote_path: /gabriel.goncalves
+          localDir: ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }}
+          remoteDir: /gabriel.goncalves
