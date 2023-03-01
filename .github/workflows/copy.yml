@@ -33,9 +33,15 @@ jobs:
         run: |
           file=$(ls -1 ./auxiliar-connector/target/*.jar | xargs basename)
           path=$(ls -1 ./auxiliar-connector/target/*.jar)
-          echo "Path: $path"
+          echo "full_path=$path" >> $GITHUB_OUTPUT
           echo "Filename: $file"
           echo "files=$file" >> $GITHUB_OUTPUT
+
+      - name: Criar pasta dentro de target
+        run: |
+          mkdir target/releaseTest
+          mv ${{steps.ftp_files.outputs.full_path}} target/releaseTest/
+          ls -l releaseTest
 
       - name: Upload files to ftp server
         uses: wangyucode/sftp-upload-action@v2.0.2
@@ -44,5 +50,5 @@ jobs:
           host: reposit.jitterbit.com
           username: gabriel.goncalves
           password: Netgear01@#!$
-          localDir: './auxiliar-connector/target'
+          localDir: './auxiliar-connector/target/releaseTest'
           remoteDir: './Builds/connectors/CDATA/test'
