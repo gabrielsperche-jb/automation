@@ -38,11 +38,12 @@ jobs:
           echo "files=$file" >> $GITHUB_OUTPUT
 
       - name: Upload files to ftp server
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        uses: Dylan700/sftp-upload-action@latest
         id: upload-to-ftp
         with:
           username: gabriel.goncalves
           password: Netgear01@#!$
           server: reposit.jitterbit.com
-          local-dir: ./auxiliar-connector/target/
-          server_dir: '/gabriel.goncalves'
+          port: 22
+          uploads: |
+            ./auxiliar-connector/target/${{ steps.ftp_files.outputs.files }} => /gabriel.goncalves/
