@@ -25,7 +25,7 @@ jobs:
 
       - name: Build
         run: |
-          mvn -q --projects auxiliar-connector --also-make install
+          mvn clean
 
       - name: FTP
         run: |
