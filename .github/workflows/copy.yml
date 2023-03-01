@@ -43,6 +43,5 @@ jobs:
           server-dir: /gabriel.goncalves
           local-dir: |
             {% for file in fromJSON(steps.ftp_files.outputs.files).split(',') %}
-            ./{{ file }}/target/*.jar
+            ./{{ file }}/target/*.jar/
             {% endfor %}
-          needs: ftp_files
