@@ -33,7 +33,7 @@ jobs:
         run: |
           modules="auxiliar-connector,support-connector"
           IFS=',' read -ra modules_array <<< "$modules"
-          echo "First output array: ${modules_array[@]}
+          echo "First output array: ${modules_array[@]}"
           fileNames=()
           filesPath=()
           for name in "${modules_array[@]}"
