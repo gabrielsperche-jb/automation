@@ -53,16 +53,18 @@ jobs:
       - name: Create a folder with jar files
         id: createFolders
         run: |
+          connectorName=common
+          tag=10.65.0.1
+          
           echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
           echo "Jar paths: ${{ steps.ftp_files.outputs.jarPath }}"
+          
+          jarPaths="${{ steps.ftp_files.outputs.jarPath }}"          
           jarNames="${{ steps.ftp_files.outputs.jarName }}"
-          jarPaths="${{ steps.ftp_files.outputs.jarPath }}"
+          IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
-          tag=10.65.0.1
-          connectorName=common
-          
+          firstConnector="${jarNamesArray[0]}"
           releaseFolder=$tag"-"$connectorName
-          firstConnector="${jarNames[0]}"
           
           echo "Release Folder: $releaseFolder"
           echo "First Connector Name: $firstConnector"
