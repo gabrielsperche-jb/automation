@@ -60,15 +60,14 @@ jobs:
           jarNames="${{ steps.ftp_files.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
-          namesLength=0
           for jarName in "${jarNamesArray[@]}"
           do
-            namesLength++
+            namesLength+=1
           done
           
           echo "Number of changed modules: $namesLength"
           
-          if [ namesLength == 2 ]; then
+          if [ namesLength == 1 ]; then
             connectorName=auxiliar
           else
             connectorName=common
