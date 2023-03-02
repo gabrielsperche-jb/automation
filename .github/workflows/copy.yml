@@ -66,6 +66,8 @@ jobs:
             namesLength+=1
           done
           
+          echo "Number of changed modules: $namesLength"
+          
           if [ namesLength == 2 ]; then
             connectorName=auxiliar
           else
