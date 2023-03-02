@@ -64,7 +64,7 @@ jobs:
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           firstConnector="${jarNamesArray[0]}"
-          echo "Quantidade de modulos alterados: ${{ jarNamesArray.length }}"
+          echo "Changed modules length: ${{ jarNamesArray.length }}"
           releaseFolder=$tag"-"$connectorName
           
           echo "Release Folder: $releaseFolder"
