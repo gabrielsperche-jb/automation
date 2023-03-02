@@ -59,7 +59,7 @@ jobs:
         id: createFolders
         run: |
           fromProp="${{ steps.moduleName.outputs.name }}"
-          echo "Retrieve from properties: $fromProp" 
+          echo "Retrieve from properties:  $fromProp" 
           
           connectorName=initial
           tag=10.65.0.1
