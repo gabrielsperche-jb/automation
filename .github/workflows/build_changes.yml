@@ -68,6 +68,7 @@ jobs:
 
       # Increment the latest release tag.
       - name: Increment tag
+        if: success()
         id: increment_tag
         run: |
           # Get the latest release tag from the output variable of the previous step.
@@ -91,6 +92,7 @@ jobs:
 
       # Tag the latest commit with the new tag.
       - name: Tag commit with new tag
+        if: success()
         run: |
           # Get the new tag from the output variable of the previous step.
           echo "Tagging with ${{ steps.increment_tag.outputs.new_tag }}"
@@ -105,6 +107,7 @@ jobs:
 
       # Retrieve Filenames and Full Path of changed .jar files
       - name: Retrieve Filename and Path
+        if: success()
         id: ftpFiles
         run: |
           echo "${{ steps.list_modules.outputs.modules }}"
@@ -128,6 +131,7 @@ jobs:
 
       # Retrieve name of fist changed module from a .properties file inside root path
       - name: Retrieve name from properties
+        if: success()
         id: moduleName
         uses: christian-draeger/read-properties@1.1.1
         with:
@@ -136,6 +140,7 @@ jobs:
 
       # Create a temporary folder with release folder that contains .jar files to be uploaded
       - name: Create a folder with jar files
+        if: success()
         id: createFolders
         run: |
 
@@ -159,7 +164,7 @@ jobs:
           echo "Number of changed modules: $namesLength"
 
           # If more than one module was changed add -common at release folder name, otherwise, the name from prop file
-          if [ "$namesLength" == "${{2}}" ]; then
+          if [ "$namesLength" == "${{1}}" ]; then
             connectorName=$fromPropFile
           else
             connectorName=common
@@ -183,6 +188,7 @@ jobs:
 
       # Upload the release folder to Reposit replacing if exists
       - name: Upload files to ftp server
+        if: success()
         uses: wangyucode/sftp-upload-action@v2.0.2
         id: upload-to-ftp
         with:
