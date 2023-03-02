@@ -30,7 +30,6 @@ jobs:
           list=$(git diff --name-only HEAD^ | grep -o ".*-connector\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
           echo "Modules changed: $list"
           echo "modules=$list" >> $GITHUB_OUTPUT
-          echo "modulesEnv=$list" >> GITHUB_ENV
 
       # Build the changed modules using Maven
       - name: Build Projects
@@ -108,7 +107,8 @@ jobs:
       - name: Retrieve Filename and Path
         id: ftpFiles
         run: |
-          modules="${{ env.modulesEnv }}"
+          echo "${{ steps.list_modules.outputs.modules }}"
+          modules="${{ steps.list_modules.outputs.modules }}"
 
           #Attribute modules names into an array
           IFS=',' read -ra modules_array <<< "$modules"
