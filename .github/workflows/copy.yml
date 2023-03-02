@@ -64,7 +64,7 @@ jobs:
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           firstConnector="${jarNamesArray[0]}"
-          echo "Changed modules length: ${{ jarNamesArray.length }}"
+          echo "Changed modules length: ${ #jarNamesArray[@]}"
           releaseFolder=$tag"-"$connectorName
           
           echo "Release Folder: $releaseFolder"
