@@ -53,7 +53,7 @@ jobs:
       - name: Create a folder with jar files
         id: createFolders
         run: |
-          connectorName=common
+          connectorName=initial
           tag=10.65.0.1
           
           echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
@@ -64,8 +64,19 @@ jobs:
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           firstConnector="${jarNamesArray[0]}"
-          echo "Changed modules length: ${{ #jarNamesArray[@]}}"
           releaseFolder=$tag"-"$connectorName
+          
+          namesLength=0
+          for jarName in "${jarNamesArray[@]}"
+          do
+            namesLength+=1
+          done
+          
+          if [ namesLength == 1 ]; then
+            connectorName=auxiliar
+          else
+            connectorName=common
+          fi
           
           echo "Release Folder: $releaseFolder"
           echo "First Connector Name: $firstConnector"
