@@ -56,15 +56,9 @@ jobs:
           connectorName=initial
           tag=10.65.0.1
           
-          echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
-          echo "Jar paths: ${{ steps.ftp_files.outputs.jarPath }}"
-          
           jarPaths="${{ steps.ftp_files.outputs.jarPath }}"          
           jarNames="${{ steps.ftp_files.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
-          
-          firstConnector="${jarNamesArray[0]}"
-          releaseFolder=$tag"-"$connectorName
           
           namesLength=0
           for jarName in "${jarNamesArray[@]}"
@@ -72,11 +66,14 @@ jobs:
             namesLength+=1
           done
           
-          if [ namesLength == 1 ]; then
+          if [ namesLength == 2 ]; then
             connectorName=auxiliar
           else
             connectorName=common
           fi
+          
+          firstConnector="${jarNamesArray[0]}"
+          releaseFolder=$tag"-"$connectorName
           
           echo "Release Folder: $releaseFolder"
           echo "First Connector Name: $firstConnector"
@@ -88,8 +85,6 @@ jobs:
           do
             mv -f $path ./$firstConnector/target/filesToUpload/$releaseFolder
           done
-          
-          ls -l ./$firstConnector/target/filesToUpload/
           
           echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
 
