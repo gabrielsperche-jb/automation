@@ -60,7 +60,7 @@ jobs:
         id: createFolders
         run: |
           fromPropFile="${{ steps.moduleName.outputs.name }}"
-          echo "Retrieve from properties:  $fromPropFile" 
+          echo "Retrieve from properties: $fromPropFile" 
           
           connectorName=initial
           tag=10.65.0.1
@@ -78,7 +78,7 @@ jobs:
           echo "Number of changed modules: $namesLength"
           
           if [ "$namesLength" == "${{2}}" ]; then
-            connectorName="${{fromPropFile}}"
+            connectorName=$fromPropFile
           else
             connectorName=common
           fi
