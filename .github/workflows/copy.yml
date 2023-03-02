@@ -54,9 +54,9 @@ jobs:
         id: createFolders
         run: |
           echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
-          echo "Jar paths: ${{ steps.build.outputs.jarPath }}"
+          echo "Jar paths: ${{ steps.ftp_files.outputs.jarPath }}"
           jarNames=${{ steps.ftp_files.outputs.jarName }}"
-          jarPaths=${{ steps.build.outputs.jarPath }}"
+          jarPaths=${{ steps.ftp_files.outputs.jarPath }}"
           
           tag=10.65.0.1
           connectorName=common
