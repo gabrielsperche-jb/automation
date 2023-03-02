@@ -60,12 +60,11 @@ jobs:
           jarNames="${{ steps.ftp_files.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
-          arrayNames="${{length(jarNamesArray)}}"
-          echo "Array Name: $arrayNames"
+          namesLength="${{0}}"
           
           for jarName in "${jarNamesArray[@]}"
           do
-            namesLength+=1
+            namesLength="${{$namesLength + 1}"
           done
           
           echo "Number of changed modules: $namesLength"
