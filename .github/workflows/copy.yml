@@ -53,8 +53,9 @@ jobs:
         id: moduleName
         uses: christian-draeger/read-properties@1.1.1
         with:
-            path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/'
+            path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/module_name.properties'
             properties: 'name'
+
       - name: Create a folder with jar files
         id: createFolders
         run: |
