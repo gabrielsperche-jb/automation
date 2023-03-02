@@ -60,6 +60,9 @@ jobs:
           jarNames="${{ steps.ftp_files.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
+          arrayNames="${{len(jarNamesArray)}}"
+          echo "Array Name: $arrayNames"
+          
           for jarName in "${jarNamesArray[@]}"
           do
             namesLength+=1
