@@ -29,11 +29,10 @@ jobs:
           mvn -q --projects auxiliar-connector,support-connector --also-make install
 
       - name: Retrieve Filename and Path
-        id: ftp_files
+        id: ftpFiles
         run: |
           modules="auxiliar-connector,support-connector"
           IFS=',' read -ra modules_array <<< "$modules"
-          echo "First output array: ${modules_array[@]}"
           fileNames=()
           filesPath=()
           for name in "${modules_array[@]}"
@@ -46,18 +45,27 @@ jobs:
           echo "Filenames array output2: ${fileNames[1]}"
           echo "Path array output: ${filesPath[@]}"
           
+          echo "firstChangedModule=${modules_array[0]}" >> $GITHUB_OUTPUT
           echo ::set-output name=jarName::"${modules_array[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
         
-
+      - name: Retrieve name from properties
+        id: moduleName
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+            path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/'
+            properties: 'name'
       - name: Create a folder with jar files
         id: createFolders
         run: |
+          fromProp="${{ steps.moduleName.outputs.name }}"
+          echo "Retrieve from properties: $fromProp" 
+          
           connectorName=initial
           tag=10.65.0.1
           
-          jarPaths="${{ steps.ftp_files.outputs.jarPath }}"          
-          jarNames="${{ steps.ftp_files.outputs.jarName }}"
+          jarPaths="${{ steps.ftpFiles.outputs.jarPath }}"          
+          jarNames="${{ steps.ftpFiles.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           namesLength="${{0}}"
