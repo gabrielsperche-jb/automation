@@ -1,6 +1,6 @@
 name: Upload File
 
-on: [push]
+on: [pull]
 
 
 jobs:
@@ -28,27 +28,29 @@ jobs:
           mvn -q clean
           mvn -q --projects auxiliar-connector,support-connector --also-make install
 
+      # Retrieve Filenames and Full Path of changed .jar files
       - name: Retrieve Filename and Path
         id: ftpFiles
         run: |
           modules="auxiliar-connector,support-connector"
+          
+          #Attribute modules names into an array
           IFS=',' read -ra modules_array <<< "$modules"
           fileNames=()
           filesPath=()
+          
+          #Retrieve module name and path from each one that was changed
           for name in "${modules_array[@]}"
           do
             fileNames+=($(ls -1 ./$name/target/*.jar | xargs basename))
             filesPath+=($(ls -1 ./$name/target/*.jar))
           done
           
-          echo "Filenames array output1: ${fileNames[0]}"
-          echo "Filenames array output2: ${fileNames[1]}"
-          echo "Path array output: ${filesPath[@]}"
-          
           echo "firstChangedModule=${modules_array[0]}" >> $GITHUB_OUTPUT
           echo ::set-output name=jarName::"${modules_array[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
-        
+
+      # Retrieve name of fist changed module from a .properties file inside root path
       - name: Retrieve name from properties
         id: moduleName
         uses: christian-draeger/read-properties@1.1.1
@@ -56,9 +58,12 @@ jobs:
             path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/module_name.properties'
             properties: 'name'
 
+      # Create a temporary folder with release folder that contains .jar files to be uploaded
       - name: Create a folder with jar files
         id: createFolders
         run: |
+          
+          # Get the name of module from last step
           fromPropFile="${{ steps.moduleName.outputs.name }}"
           echo "Retrieve from properties: $fromPropFile" 
           
@@ -69,15 +74,16 @@ jobs:
           jarNames="${{ steps.ftpFiles.outputs.jarName }}"
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
+          # Verify how many modules was changed in commit 
           namesLength="${{0}}"
           for jarName in "${jarNamesArray[@]}"
           do
             namesLength=$((namesLength+1))
           done
-          
           echo "Number of changed modules: $namesLength"
           
-          if [ "$namesLength" == "${{2}}" ]; then
+          # If more than one module was changed add -common at release folder name, otherwise, the name from prop file
+          if [ "$namesLength" == "${{1}}" ]; then
             connectorName=$fromPropFile
           else
             connectorName=common
@@ -86,12 +92,12 @@ jobs:
           firstConnector="${jarNamesArray[0]}"
           releaseFolder=$tag"-"$connectorName
           
-          echo "Release Folder: $releaseFolder"
-          echo "First Connector Name: $firstConnector"
-          echo "Connector Name: $connectorName"
+          echo "Release Folder Name: $releaseFolder"
           
+          # Create the temp folder with the release folder inside
           mkdir -p ./$firstConnector/target/filesToUpload/$releaseFolder
           
+          # Move all changed .jar files to the release folder
           for path in "${jarPaths[@]}"
           do
             mv -f $path ./$firstConnector/target/filesToUpload/$releaseFolder
@@ -99,6 +105,7 @@ jobs:
           
           echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
 
+      # Upload the release folder to Reposit replacing if exists
       - name: Upload files to ftp server
         uses: wangyucode/sftp-upload-action@v2.0.2
         id: upload-to-ftp
