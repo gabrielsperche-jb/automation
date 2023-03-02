@@ -61,10 +61,11 @@ jobs:
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           namesLength="${{0}}"
+          echo "Names Length: $namesLength"
           
           for jarName in "${jarNamesArray[@]}"
           do
-            namesLength="${{$namesLength + 1}}"
+            namesLength=${{$namesLength + 1}}
           done
           
           echo "Number of changed modules: $namesLength"
