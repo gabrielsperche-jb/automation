@@ -63,7 +63,7 @@ jobs:
           namesLength=0
           for jarName in "${jarNamesArray[@]}"
           do
-            namesLength+=1
+            namesLength++
           done
           
           echo "Number of changed modules: $namesLength"
