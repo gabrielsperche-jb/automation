@@ -61,8 +61,6 @@ jobs:
           IFS=' ' read -ra jarNamesArray <<< "$jarNames"
           
           namesLength="${{0}}"
-          echo "Names Length: $namesLength"
-          
           for jarName in "${jarNamesArray[@]}"
           do
             namesLength=$((namesLength+1))
@@ -70,7 +68,7 @@ jobs:
           
           echo "Number of changed modules: $namesLength"
           
-          if [ namesLength == 11 ]; then
+          if [ namesLength == 2 ]; then
             connectorName=auxiliar
           else
             connectorName=common
