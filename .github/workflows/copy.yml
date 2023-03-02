@@ -46,7 +46,7 @@ jobs:
           echo "Filenames array output2: ${fileNames[1]}"
           echo "Path array output: ${filesPath[@]}"
           
-          echo ::set-output name=jarName::"${fileNames[@]}"
+          echo ::set-output name=jarName::"${modules_array[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
         
 
@@ -61,8 +61,8 @@ jobs:
           tag=10.65.0.1
           connectorName=common
           
-          releaseFolder=$tag+"-"+$connectorName
-          firstConnector=${jarNames[0]}
+          releaseFolder=$tag"-"$connectorName
+          firstConnector="${jarNames[0]}"
           
           echo "Release Folder: $releaseFolder"
           echo "First Connector Name: $firstConnector"
