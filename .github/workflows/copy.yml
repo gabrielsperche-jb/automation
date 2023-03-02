@@ -59,7 +59,7 @@ jobs:
       - name: Create a folder with jar files
         id: createFolders
         run: |
-          fromProp="${{ steps.moduleName.outputs.name }}"
+          fromPropFile="${{ steps.moduleName.outputs.name }}"
           echo "Retrieve from properties:  $fromProp" 
           
           connectorName=initial
@@ -77,8 +77,8 @@ jobs:
           
           echo "Number of changed modules: $namesLength"
           
-          if [ "$namesLength" == "${{1}}" ]; then
-            connectorName=auxiliar
+          if [ "$namesLength" == "${{2}}" ]; then
+            connectorName="${{fromPropFile}}"
           else
             connectorName=common
           fi
