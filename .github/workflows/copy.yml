@@ -48,17 +48,36 @@ jobs:
           
           echo ::set-output name=jarName::"${fileNames[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
-          
-          echo "Name output: ${jarName[@]}"
-          echo "Path output: ${jarPath[@]}"
+        
 
       - name: Create a folder with jar files
+        id: createFolders
         run: |
           echo "Jar names: ${{ steps.ftp_files.outputs.jarName }}"
-          ls ./auxiliar-connector
-          mkdir -p ./auxiliar-connector/target/releaseTest
-          mv -f ${{steps.ftp_files.outputs.full_path}} ./auxiliar-connector/target/releaseTest/
-          ls -l ./auxiliar-connector/target/releaseTest/
+          echo "Jar paths: ${{ steps.build.outputs.jarPath }}"
+          jarNames=${{ steps.ftp_files.outputs.jarName }}"
+          jarPaths=${{ steps.build.outputs.jarPath }}"
+          
+          tag=10.65.0.1
+          connectorName=common
+          
+          releaseFolder=$tag+"-"+$connectorName
+          firstConnector=${jarNames[0]}
+          
+          echo "Release Folder: $releaseFolder"
+          echo "First Connector Name: $firstConnector"
+          echo "Connector Name: $connectorName"
+          
+          mkdir -p ./$firstConnector/target/filesToUpload/$releaseFolder
+          
+          for path in "${jarPaths[@]}"
+          do
+            mv -f $path ./$firstConnector/target/filesToUpload/$releaseFolder
+          done
+          
+          ls -l ./$firstConnector/target/filesToUpload/
+          
+          echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
 
       - name: Upload files to ftp server
         uses: wangyucode/sftp-upload-action@v2.0.2
@@ -67,5 +86,5 @@ jobs:
           host: reposit.jitterbit.com
           username: gabriel.goncalves
           password: Netgear01@#!$
-          localDir: './auxiliar-connector/target/releaseTest'
+          localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
