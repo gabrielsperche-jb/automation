@@ -68,7 +68,7 @@ jobs:
           
           echo "Number of changed modules: $namesLength"
           
-          if [ "$namesLength" == "${{2}}" ]; then
+          if [ "$namesLength" == "${{1}}" ]; then
             connectorName=auxiliar
           else
             connectorName=common
