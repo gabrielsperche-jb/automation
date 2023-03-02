@@ -65,7 +65,6 @@ jobs:
           
           # Back to the current branch
           git checkout -
-          git stash pop
 
       # Increment the latest release tag.
       - name: Increment tag
