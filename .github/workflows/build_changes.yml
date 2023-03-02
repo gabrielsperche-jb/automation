@@ -50,6 +50,7 @@ jobs:
         run: |
           
           # Checkout to master
+          git stash push
           git checkout develop
           
           # Fetch all tags from the repository.
@@ -64,6 +65,7 @@ jobs:
           
           # Back to the current branch
           git checkout -
+          git stash pop
 
       # Increment the latest release tag.
       - name: Increment tag
