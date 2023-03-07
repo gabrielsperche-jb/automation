@@ -1,10 +1,14 @@
 name: Automation Flow
 
-on: [push]
-
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
 
 jobs:
-  test:
+  ConnectorDeploy:
+    if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
 
     steps:
