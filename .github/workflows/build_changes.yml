@@ -1,8 +1,6 @@
 name: Automation Flow
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
 
 jobs:
   ConnectorDeploy:
