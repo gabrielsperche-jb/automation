@@ -1,8 +1,6 @@
-name: Build Changes
+name: Automation Flow
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
 
 
 jobs:
@@ -22,7 +20,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       # Find the modules that have changed
       - name: List Changed Modules
@@ -40,8 +39,8 @@ jobs:
             echo "No changes in modules. Skipping build."
           else
             echo "Modules to be built: $modules"
-            echo "Building using: mvn --projects $modules --also-make install"
-            mvn --projects $modules --also-make install
+            echo "Building using: mvn -q --projects $modules --also-make install"
+            mvn -q --projects $modules --also-make install
           fi
 
       # Get the latest release tag from the repository.
@@ -49,6 +48,11 @@ jobs:
         if: success()
         id: get_latest_release
         run: |
+          
+          # Checkout to master
+          #git stash push
+          #git checkout develop
+          
           # Fetch all tags from the repository.
           git fetch --tags 
           
@@ -58,9 +62,13 @@ jobs:
           
           # Set an output variable for the latest tag.
           echo "latest=$latest_tag" >> $GITHUB_OUTPUT
+          
+          # Back to the current branch
+          #git checkout -
 
       # Increment the latest release tag.
       - name: Increment tag
+        if: success()
         id: increment_tag
         run: |
           # Get the latest release tag from the output variable of the previous step.
@@ -84,6 +92,7 @@ jobs:
 
       # Tag the latest commit with the new tag.
       - name: Tag commit with new tag
+        if: success()
         run: |
           # Get the new tag from the output variable of the previous step.
           echo "Tagging with ${{ steps.increment_tag.outputs.new_tag }}"
@@ -95,3 +104,96 @@ jobs:
           # Create a new tag and push it to the repository.
           git tag ${{ steps.increment_tag.outputs.new_tag }}
           git push origin ${{ steps.increment_tag.outputs.new_tag }}
+
+      # Retrieve Filenames and Full Path of changed .jar files
+      - name: Retrieve Filename and Path
+        if: success()
+        id: ftpFiles
+        run: |
+          echo "${{ steps.list_modules.outputs.modules }}"
+          modules="${{ steps.list_modules.outputs.modules }}"
+
+          #Attribute modules names into an array
+          IFS=',' read -ra modules_array <<< "$modules"
+          fileNames=()
+          filesPath=()
+
+          #Retrieve module name and path from each one that was changed
+          for name in "${modules_array[@]}"
+          do
+            fileNames+=($(ls -1 ./$name/target/*.jar | xargs basename))
+            filesPath+=($(ls -1 ./$name/target/*.jar))
+          done
+
+          echo "firstChangedModule=${modules_array[0]}" >> $GITHUB_OUTPUT
+          echo ::set-output name=jarName::"${modules_array[@]}"
+          echo ::set-output name=jarPath::"${filesPath[@]}"
+
+      # Retrieve name of fist changed module from a .properties file inside root path
+      - name: Retrieve name from properties
+        if: success()
+        id: moduleName
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/module_name.properties'
+          properties: 'name'
+
+      # Create a temporary folder with release folder that contains .jar files to be uploaded
+      - name: Create a folder with jar files
+        if: success()
+        id: createFolders
+        run: |
+
+          # Get the name of module from last step
+          fromPropFile="${{ steps.moduleName.outputs.name }}"
+          echo "Retrieve from properties: $fromPropFile" 
+
+          connectorName=initial
+          tag=${{ steps.increment_tag.outputs.new_tag }}
+
+          jarPaths="${{ steps.ftpFiles.outputs.jarPath }}"          
+          jarNames="${{ steps.ftpFiles.outputs.jarName }}"
+          IFS=' ' read -ra jarNamesArray <<< "$jarNames"
+
+          # Verify how many modules was changed in commit 
+          namesLength="${{0}}"
+          for jarName in "${jarNamesArray[@]}"
+          do
+            namesLength=$((namesLength+1))
+          done
+          echo "Number of changed modules: $namesLength"
+
+          # If more than one module was changed add -common at release folder name, otherwise, the name from prop file
+          if [ "$namesLength" == "${{1}}" ]; then
+            connectorName=$fromPropFile
+          else
+            connectorName=common
+          fi
+
+          firstConnector="${jarNamesArray[0]}"
+          releaseFolder=$tag"-"$connectorName
+
+          echo "Release Folder Name: $releaseFolder"
+
+          # Create the temp folder with the release folder inside
+          mkdir -p ./$firstConnector/target/filesToUpload/$releaseFolder
+
+          # Move all changed .jar files to the release folder
+          for path in "${jarPaths[@]}"
+          do
+            mv -f $path ./$firstConnector/target/filesToUpload/$releaseFolder
+          done
+
+          echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
+
+      # Upload the release folder to Reposit replacing if exists
+      - name: Upload files to ftp server
+        if: success()
+        uses: wangyucode/sftp-upload-action@v2.0.2
+        id: upload-to-ftp
+        with:
+          host: reposit.jitterbit.com
+          username: gabriel.goncalves
+          password: Netgear01@#!$
+          localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
+          remoteDir: './Builds/connectors/CDATA/test/uploadedFile'

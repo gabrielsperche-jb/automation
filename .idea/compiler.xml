@@ -10,5 +10,9 @@
         <module name="auxiliar-connector" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="auxiliar" target="1.8" />
+      <module name="support" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
