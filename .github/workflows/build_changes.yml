@@ -197,14 +197,3 @@ jobs:
           password: Netgear01@#!$
           localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
-
-      - name: Updating version on connector repo
-        id: httpReq1
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://httpbin.org/headers'
-          method: 'GET'
-          customHeaders: '{"Testing": "Gabriel"}'
-      - name: Req 1 Response
-        run: |
-          echo ${{ steps.httpReq1.outputs.response }}
