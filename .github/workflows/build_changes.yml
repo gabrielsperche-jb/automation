@@ -1,12 +1,10 @@
 name: Automation Flow
 
-on:
-  pull_request:
-    types: [closed]
+on: [push]
+
 
 jobs:
-  ConnectorDeploy:
-    if: github.event.pull_request.merged == 'true'
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -128,17 +126,35 @@ jobs:
           done
 
           echo "firstChangedModule=${modules_array[0]}" >> $GITHUB_OUTPUT
+          echo "allChangedModules=${modules_array[@]}" >> $GITHUB_OUTPUT
           echo ::set-output name=jarName::"${modules_array[@]}"
           echo ::set-output name=jarPath::"${filesPath[@]}"
 
       # Retrieve name of fist changed module from a .properties file inside root path
-      - name: Retrieve name from properties
+      - name: Retrieve first name from properties
         if: success()
         id: moduleName
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/module_name.properties'
           properties: 'name'
+
+      - name: Retrieve all modules name from properties
+        if: success()
+        id: allModulesName
+        run: |
+          
+          allModules = "${{ steps.ftpFiles.outputs.allChangedModules }}"
+          IFS=' ' read -ra allModulesArray <<< "allModules"
+          
+          names=()
+          for module in "${allModulesArray[@]}"
+          do
+            name=$(cat "./$module/module_name.properties" | grep "name" | cut -d "=" -f2)
+            echo "The name of $module module is $name"
+            names+=("$name")
+          done
+          echo "propNames=${names[@]}" >> $GITHUB_OUTPUT
 
       # Create a temporary folder with release folder that contains .jar files to be uploaded
       - name: Create a folder with jar files
@@ -176,6 +192,7 @@ jobs:
           releaseFolder=$tag"-"$connectorName
 
           echo "Release Folder Name: $releaseFolder"
+          echo "releaseFolderName=$releaseFolder" >> $GITHUB_OUTPUT
 
           # Create the temp folder with the release folder inside
           mkdir -p ./$firstConnector/target/filesToUpload/$releaseFolder
@@ -199,3 +216,38 @@ jobs:
           password: Netgear01@#!$
           localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
+
+      - name: Create Endpoints to Connector Repo request
+        if: success()
+        id: createUrl
+        run: |
+          connectorNames = "${{ steps.ftpFiles.outputs.firstChangedModule }}"
+          IFS=' ' read -ra connectorNamesArray <<< "connectorNames"
+          
+          urls=()
+          for connectorName in connectorNamesArray
+          do
+            echo "Send request to $URL"
+            curl -X POST "$URL"
+          done
+
+      - name: Send request to Connector Repo
+        run: |
+          connectorNames = "${{ steps.ftpFiles.outputs.firstChangedModule }}"
+          IFS=' ' read -ra connectorNamesArray <<< "connectorNames"
+          
+          for url in connectorNamesArray
+          do
+            echo "Send request to $URL"
+            curl -X POST "$URL"
+          done
+
+      - name: Updating version on connector repo
+        id: httpReq1
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=${{ steps.createFolders.outputs.releaseFolderName }}'
+          method: 'POST'
+      - name: Connector Repo Response
+        run: |
+          echo ${{ steps.httpReq1.outputs.response }}
