@@ -50,8 +50,8 @@ jobs:
         run: |
           
           # Checkout to master
-          #git stash push
-          #git checkout develop
+          git stash push
+          git checkout develop
           
           # Fetch all tags from the repository.
           git fetch --tags 
@@ -64,7 +64,7 @@ jobs:
           echo "latest=$latest_tag" >> $GITHUB_OUTPUT
           
           # Back to the current branch
-          #git checkout -
+          git checkout -
 
       # Increment the latest release tag.
       - name: Increment tag
