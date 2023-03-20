@@ -54,10 +54,10 @@ jobs:
           #git checkout develop
           
           # Fetch all tags from the repository.
-          git pull origin develop --force --tags 
+          #git pull origin develop --force --tags 
           
           # Get the latest release tag.
-          latest_tag=$(git describe --abbrev=0 --tags)
+          latest_tag=$(git ls-remote --tags | awk '{print $2}' | sort -V | tail -n1 | sed 's/refs\/tags\///')
           echo "Last Tag: $latest_tag"
           
           # Set an output variable for the latest tag.
