@@ -54,7 +54,7 @@ jobs:
           #git checkout develop
           
           # Fetch all tags from the repository.
-          git fetch origin develop --force --tags 
+          git pull origin develop --force --tags 
           
           # Get the latest release tag.
           latest_tag=$(git describe --abbrev=0 --tags)
