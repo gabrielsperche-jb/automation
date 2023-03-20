@@ -6,6 +6,6 @@ public class Main {
     int num = 9;
     int hnum = 4;
     int hfnum = 1;
-    String test = "fk";
+    String test = "k";
   }
 }
