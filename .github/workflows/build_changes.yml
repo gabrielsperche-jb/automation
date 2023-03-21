@@ -156,7 +156,7 @@ jobs:
         with:
           host: reposit.jitterbit.com
           username: gabriel.goncalves
-          password: Netgear01@#!$
+          password: Rafael@10
           localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
 
