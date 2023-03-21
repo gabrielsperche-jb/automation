@@ -4,7 +4,7 @@ public class Main {
   public static void main(String[] args) {
     System.out.println("Auxiliary Module!");
     int num = 9;
-    int hnum = 4;
+    int hnum = 44;
     int hfnum = 1;
     String test = "g";
   }

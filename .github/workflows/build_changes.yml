@@ -117,7 +117,7 @@ jobs:
           
           # Get the name of all changed modules
           changedModules = "${{ steps.ftpFiles.outputs.allChangedModules }}"
-          IFS=' ' read -ra allChangedModules <<< "changedModules"
+          IFS=' ' read -ra allChangedModules <<< "$changedModules"
           echo "Module Names: $allChangedModules"
           
           tag=${{ steps.increment_tag.outputs.new_tag }}
