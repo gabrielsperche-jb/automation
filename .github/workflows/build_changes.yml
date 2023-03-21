@@ -49,22 +49,12 @@ jobs:
         id: get_latest_release
         run: |
           
-          # Checkout to master
-          #git stash push
-          #git checkout develop
-          
-          # Fetch all tags from the repository.
-          #git pull origin develop --force --tags 
-          
           # Get the latest release tag.
           latest_tag=$(git ls-remote --tags | awk '{print $2}' | sort -V | tail -n1 | sed 's/refs\/tags\///')
           echo "Last Tag: $latest_tag"
           
           # Set an output variable for the latest tag.
           echo "latest=$latest_tag" >> $GITHUB_OUTPUT
-          
-          # Back to the current branch
-          #git checkout -
 
       # Increment the latest release tag.
       - name: Increment tag
@@ -115,92 +105,45 @@ jobs:
 
           #Attribute modules names into an array
           IFS=',' read -ra modules_array <<< "$modules"
-          fileNames=()
-          filesPath=()
-
-          #Retrieve module name and path from each one that was changed
-          for name in "${modules_array[@]}"
-          do
-            fileNames+=($(ls -1 ./$name/target/*.jar | xargs basename))
-            filesPath+=($(ls -1 ./$name/target/*.jar))
-          done
 
           echo "firstChangedModule=${modules_array[0]}" >> $GITHUB_OUTPUT
           echo "allChangedModules=${modules_array[@]}" >> $GITHUB_OUTPUT
-          echo ::set-output name=jarName::"${modules_array[@]}"
-          echo ::set-output name=jarPath::"${filesPath[@]}"
-
-      # Retrieve name of fist changed module from a .properties file inside root path
-      - name: Retrieve first name from properties
-        if: success()
-        id: moduleName
-        uses: christian-draeger/read-properties@1.1.1
-        with:
-          path: './${{ steps.ftpFiles.outputs.firstChangedModule }}/module_name.properties'
-          properties: 'name'
-
-      - name: Retrieve all modules name from properties
-        if: success()
-        id: allModulesName
-        run: |
-          
-          allModules = "${{ steps.ftpFiles.outputs.allChangedModules }}"
-          IFS=' ' read -ra allModulesArray <<< "allModules"
-          
-          names=()
-          for module in "${allModulesArray[@]}"
-          do
-            name=$(cat "./$module/module_name.properties" | grep "name" | cut -d "=" -f2)
-            echo "The name of $module module is $name"
-            names+=("$name")
-          done
-          echo "propNames=${names[@]}" >> $GITHUB_OUTPUT
 
       # Create a temporary folder with release folder that contains .jar files to be uploaded
       - name: Create a folder with jar files
         if: success()
         id: createFolders
         run: |
-
-          # Get the name of module from last step
-          fromPropFile="${{ steps.moduleName.outputs.name }}"
-          echo "Retrieve from properties: $fromPropFile" 
-
-          connectorName=initial
+          
+          # Get the name of all changed modules
+          changedModules = "${{ steps.ftpFiles.outputs.allChangedModules }}"
+          IFS=' ' read -ra allChangedModules <<< "changedModules"
+          echo "Module Names: $allChangedModules"
+          
           tag=${{ steps.increment_tag.outputs.new_tag }}
-
-          jarPaths="${{ steps.ftpFiles.outputs.jarPath }}"          
-          jarNames="${{ steps.ftpFiles.outputs.jarName }}"
-          IFS=' ' read -ra jarNamesArray <<< "$jarNames"
-
-          # Verify how many modules was changed in commit 
-          namesLength="${{0}}"
-          for jarName in "${jarNamesArray[@]}"
-          do
-            namesLength=$((namesLength+1))
-          done
-          echo "Number of changed modules: $namesLength"
-
-          # If more than one module was changed add -common at release folder name, otherwise, the name from prop file
-          if [ "$namesLength" == "${{1}}" ]; then
-            connectorName=$fromPropFile
-          else
-            connectorName=common
-          fi
-
-          firstConnector="${jarNamesArray[0]}"
-          releaseFolder=$tag"-"$connectorName
-
-          echo "Release Folder Name: $releaseFolder"
-          echo "releaseFolderName=$releaseFolder" >> $GITHUB_OUTPUT
-
+          echo "Tag name: $tag"
+          
           # Create the temp folder with the release folder inside
-          mkdir -p ./$firstConnector/target/filesToUpload/$releaseFolder
-
-          # Move all changed .jar files to the release folder
-          for path in "${jarPaths[@]}"
+          firstConnector="${allChangedModules[0]}"
+          mkdir -p ./$firstConnector/target/filesToUpload
+          
+          for eachModule in "${allChangedModules[@]}"
           do
-            mv -f $path ./$firstConnector/target/filesToUpload/$releaseFolder
+            #Retrieve module name from .properties file
+            name=$(cat "./$eachModule/module_name.properties" | grep "name" | cut -d "=" -f2)
+            echo "The name of $module module is $name"
+          
+            #Build path to .jar file of connector
+            connectorJarPath=$(ls -1 ./$eachModule/target/*.jar)
+            echo "Connector Jar Path: $connectorJarPath"
+          
+            #Create folder to each connector with same tag
+            connectorFolder=$tag"-"$name
+            echo "Connector Folder: $connectorFolder"
+            mkdir -p ./$firstConnector/target/filesToUpload/$connectorFolder
+          
+            #Move the .jar to destination folder
+            mv -f $connectorJarPath ./$firstConnector/target/filesToUpload/$connectorFolder
           done
 
           echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
