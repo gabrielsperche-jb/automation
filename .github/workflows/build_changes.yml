@@ -139,7 +139,7 @@ jobs:
             if [ -z "$name" ]; then
               local adapterFile="./$module/ui/adapter.json"
               if [ -f "$adapterFile" ]; then
-                name="$(grep 'name' "$adapterFile" | cut -d':' -f2 | tr -d '[:space:]')"
+                name=$(jq -r '.name' "$adapterFile" | tr -d '[:space:]')
               fi
             fi
           
