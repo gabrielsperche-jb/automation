@@ -1,6 +1,6 @@
 name: Automation Flow
 
-on: [push]
+on: [ push ]
 
 
 jobs:
@@ -29,18 +29,53 @@ jobs:
         run: |
           list=$(git diff --name-only HEAD^ | grep -Eo ".*(connector|common)\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
           echo "Modules changed: $list"
+          
+          if echo $list | grep -Eq "/common\b"; then
+            commonChanged=true
+          fi
+          
+          if $commonChanged; then
+            allModules=$(find ./automation -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
+            for module in $(echo $list | tr ',' ' '); do
+              if echo $module | grep -qE ".*-connector.*"; then
+                allModules=$(echo $allModules | sed "s/\b$module\b//g")
+              fi
+            done
+          
+            for module in $allModules; do
+              author=$(unzip -p "$module" src/main/resources/META-INF/MANIFEST.MF | grep -i ^author: | awk -F ': ' '{print $2}')
+              if [[ "$author" != "Jitterbit" ]]; then
+                allModules=$(echo $allModules | sed "s/\b$module\b//g")
+              fi
+            done
+
+          fi
+          
+          
+  
+          echo "commonFlag=$commonChanged" >> $GITHUB_OUTPUT
           echo "modules=$list" >> $GITHUB_OUTPUT
+          echo "filteredModules=$allModules" >> $GITHUB_OUTPUT
 
       # Build the changed modules using Maven
       - name: Build Projects
         run: |
           modules="${{ steps.list_modules.outputs.modules }}"
+          filteredModules="${{ steps.list_modules.outputs.filteredModules }}"
+          flag="${{ steps.list_modules.outputs.commonFlag }}"
+          
           if [ -z "$modules" ]; then
             echo "No changes in modules. Skipping build."
           else
             echo "Modules to be built: $modules"
             echo "Building using: mvn -q --projects $modules --also-make install"
             mvn -q --projects $modules --also-make install
+          fi
+          
+          if ["$flag"]; then
+            echo "Modules will be built due changes on common"
+            echo "Building using: mvn -q --projects $filteredModules --also-make install"
+            mvn -q --projects $filteredModules --also-make install
           fi
 
       # Get the latest release tag from the repository.
@@ -115,19 +150,18 @@ jobs:
         id: createFolders
         run: |
           
-          #Function to retrieve name from .properties file
-          # Função para obter o nome do módulo de um arquivo .properties, Manifest.MF ou Adapter.json
+          #Function to retrieve name from .properties, Manifest.MF or adapter.json files
           getModuleName() {
               local module="$1"
               local propFile="./$module/module_name.properties"
               local name=""
-            
-            # Verificar se o arquivo module_name.properties existe
+          
+            #Check if module_name.properties exists
             if [ -f "$propFile" ]; then
               name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
             fi
           
-            # Se o nome ainda não foi encontrado, tentar procurar no Manifest.MF
+            #If it doesn't exists, try to retrieve from Manifest.MF
             if [ -z "$name" ]; then
               local manifestFile="./$module/target/classes/META-INF/MANIFEST.MF"
               if [ -f "$manifestFile" ]; then
@@ -135,7 +169,7 @@ jobs:
               fi
             fi
           
-            # Se ainda não encontrou o nome, tentar procurar no arquivo Adapter.json
+            #Finally as last resource, retrieve from adapter.json
             if [ -z "$name" ]; then
               local adapterFile="./$module/ui/adapter.json"
               if [ -f "$adapterFile" ]; then
