@@ -34,7 +34,7 @@ jobs:
             commonChanged=true
           fi
           
-          echo ls ../automation
+          echo "valor de commonChanged: $commonChanged"
           
           if $commonChanged; then
             allModules=$(find ../automation/ -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
