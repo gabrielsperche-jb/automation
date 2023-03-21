@@ -137,7 +137,7 @@ jobs:
           
             # Se ainda não encontrou o nome, tentar procurar no arquivo Adapter.json
             if [ -z "$name" ]; then
-              local adapterFile="./$module/src/main/resources/adapter.json"
+              local adapterFile="./$module/ui/adapter.json"
               if [ -f "$adapterFile" ]; then
                 name="$(grep 'name' "$adapterFile" | cut -d':' -f2 | tr -d '[:space:]')"
               fi

@@ -1,0 +1,279 @@
+{
+  "name": "Algonomy Personalization",
+  "sandbox": true,
+  "version": "1.0.0",
+  "defaultActivityIcon": "/assets/images/Algonomy_Activity_Icon.svg",
+  "endpoint": {
+    "displayName": "Algonomy Personalization Endpoint",
+    "icon": "/assets/images/Algonomy_Folder_Icon.svg",
+    "properties": [
+      {
+        "name": "apiKey",
+        "displayName": "API Key",
+        "type": "string",
+        "widgetHint": "password",
+        "validators": [
+          {
+            "name": "required"
+          }
+        ],
+        "use": {
+          "placeholder": "API Key retrieved from the Algonomy Dashboard"
+        }
+      },
+      {
+        "name": "clientId",
+        "displayName": "Client ID",
+        "type": "string",
+        "widgetHint": "value",
+        "validators": [
+          {
+            "name": "required"
+          }
+        ],
+        "use": {
+          "placeholder": "Client ID provided by Algonomy"
+        }
+      },
+      {
+        "name": "clientSecret",
+        "displayName": "Client Secret",
+        "type": "string",
+        "widgetHint": "password",
+        "validators": [
+          {
+            "name": "required"
+          }
+        ],
+        "use": {
+          "placeholder": "Client Secret provided by Algonomy"
+        }
+      },
+      {
+        "name": "environment",
+        "displayName": "Environment",
+        "type": "string",
+        "multiple": false,
+        "widgetHint": "radio-choice",
+        "enumValues": [
+          {
+            "enumValue": "Production",
+            "realValue": "gateway"
+          },
+          {
+            "enumValue": "Staging",
+            "realValue": "staging-gateway"
+          },
+          {
+            "enumValue": "Sandbox",
+            "realValue": "qa-gateway"
+          }
+        ],
+        "default": "gateway"
+      },
+      {
+        "name": "proxyEnabled",
+        "displayName": "Use Proxy Settings (Private Agent Only)",
+        "type": "boolean",
+        "defaultValue": false,
+        "validators": [
+          {
+            "name": "required"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": {
+    "create": {
+      "displayName": "Create",
+      "properties": [
+        {
+          "name": "list-object-page-first",
+          "type": "pagination",
+          "children": [
+            {
+              "name": "list-object-first",
+              "displayName": "Select an object",
+              "type": "list-object",
+              "use": {
+                "ui": {
+                  "selectObjectLabel": "Selected object: ",
+                  "tableHeaders": [
+                    "Name",
+                    "Description"
+                  ],
+                  "tableItems": [
+                    "name",
+                    "description"
+                  ]
+                },
+                "discoveryType": "provided",
+                "orientation": "output",
+                "documentIdPath": "this"
+              }
+            },
+            {
+              "name": "continueOnFault",
+              "displayName": "Continue on error",
+              "type": "boolean",
+              "defaultValue": false
+            }
+          ]
+        }
+      ]
+    },
+    "read": {
+      "displayName": "Read",
+      "properties": [
+        {
+          "name": "list-object-page-first",
+          "type": "pagination",
+          "children": [
+            {
+              "name": "list-object-first",
+              "displayName": "Select an object",
+              "type": "list-object",
+              "use": {
+                "ui": {
+                  "selectObjectLabel": "Selected object: ",
+                  "tableHeaders": [
+                    "Name",
+                    "Description"
+                  ],
+                  "tableItems": [
+                    "name",
+                    "description"
+                  ]
+                },
+                "discoveryType": "provided",
+                "orientation": "output",
+                "documentIdPath": "this"
+              }
+            },
+            {
+              "name": "continueOnFault",
+              "displayName": "Continue on error",
+              "type": "boolean",
+              "defaultValue": false
+            }
+          ]
+        }
+      ]
+    },
+    "update": {
+      "displayName": "Update",
+      "properties": [
+        {
+          "name": "list-object-page-first",
+          "type": "pagination",
+          "children": [
+            {
+              "name": "list-object-first",
+              "displayName": "Select an object",
+              "type": "list-object",
+              "use": {
+                "ui": {
+                  "selectObjectLabel": "Selected object: ",
+                  "tableHeaders": [
+                    "Name",
+                    "Description"
+                  ],
+                  "tableItems": [
+                    "name",
+                    "description"
+                  ]
+                },
+                "discoveryType": "provided",
+                "orientation": "output",
+                "documentIdPath": "this"
+              }
+            },
+            {
+              "name": "continueOnFault",
+              "displayName": "Continue on error",
+              "type": "boolean",
+              "defaultValue": false
+            }
+          ]
+        }
+      ]
+    },
+    "delete": {
+      "displayName": "Delete",
+      "properties": [
+        {
+          "name": "list-object-page-first",
+          "type": "pagination",
+          "children": [
+            {
+              "name": "list-object-first",
+              "displayName": "Select an object",
+              "type": "list-object",
+              "use": {
+                "ui": {
+                  "selectObjectLabel": "Selected object: ",
+                  "tableHeaders": [
+                    "Name",
+                    "Description"
+                  ],
+                  "tableItems": [
+                    "name",
+                    "description"
+                  ]
+                },
+                "discoveryType": "provided",
+                "orientation": "output",
+                "documentIdPath": "this"
+              }
+            },
+            {
+              "name": "continueOnFault",
+              "displayName": "Continue on error",
+              "type": "boolean",
+              "defaultValue": false
+            }
+          ]
+        }
+      ]
+    },
+    "search": {
+      "displayName": "Search",
+      "properties": [
+        {
+          "name": "list-object-page-first",
+          "type": "pagination",
+          "children": [
+            {
+              "name": "list-object-first",
+              "displayName": "Select an object",
+              "type": "list-object",
+              "use": {
+                "ui": {
+                  "selectObjectLabel": "Selected object: ",
+                  "tableHeaders": [
+                    "Name",
+                    "Description"
+                  ],
+                  "tableItems": [
+                    "name",
+                    "description"
+                  ]
+                },
+                "discoveryType": "provided",
+                "orientation": "output",
+                "documentIdPath": "this"
+              }
+            },
+            {
+              "name": "continueOnFault",
+              "displayName": "Continue on error",
+              "type": "boolean",
+              "defaultValue": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
