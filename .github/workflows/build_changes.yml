@@ -116,12 +116,37 @@ jobs:
         run: |
           
           #Function to retrieve name from .properties file
+          # Função para obter o nome do módulo de um arquivo .properties, Manifest.MF ou Adapter.json
           getModuleName() {
-            local propFile="$1"
-            local name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+              local module="$1"
+              local propFile="./$module/module_name.properties"
+              local name=""
+            
+            # Verificar se o arquivo module_name.properties existe
+            if [ -f "$propFile" ]; then
+              name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+            fi
+          
+            # Se o nome ainda não foi encontrado, tentar procurar no Manifest.MF
+            if [ -z "$name" ]; then
+              local manifestFile="./$module/target/classes/META-INF/MANIFEST.MF"
+              if [ -f "$manifestFile" ]; then
+                name="$(grep 'ReleaseTag' "$manifestFile" | cut -d':' -f2 | tr -d '[:space:]')"
+              fi
+            fi
+          
+            # Se ainda não encontrou o nome, tentar procurar no arquivo Adapter.json
+            if [ -z "$name" ]; then
+              local adapterFile="./$module/src/main/resources/adapter.json"
+              if [ -f "$adapterFile" ]; then
+                name="$(grep 'name' "$adapterFile" | cut -d':' -f2 | tr -d '[:space:]')"
+              fi
+            fi
+          
             echo "$name"
           }
-          
+
+
           # Get the name of all changed modules
           changedModules=$(echo "${{ steps.ftpFiles.outputs.allChangedModules }}")
           IFS=' ' read -ra allChangedModules <<< "$changedModules"
@@ -137,7 +162,7 @@ jobs:
           for eachModule in "${allChangedModules[@]}"
           do
             #Retrieve module name from .properties file
-            name=$(getModuleName "./$eachModule/module_name.properties")
+            name=$(getModuleName "$eachModule")
             echo "The name of $module module is $name"
           
             #Build path to .jar file of connector
