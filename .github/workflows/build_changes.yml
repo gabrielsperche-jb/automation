@@ -115,6 +115,13 @@ jobs:
         id: createFolders
         run: |
           
+          #Function to retrieve name from .properties file
+          getModuleName() {
+            local propFile="$1"
+            local name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+            echo "$name"
+          }
+          
           # Get the name of all changed modules
           changedModules=$(echo "${{ steps.ftpFiles.outputs.allChangedModules }}")
           IFS=' ' read -ra allChangedModules <<< "$changedModules"
@@ -130,7 +137,7 @@ jobs:
           for eachModule in "${allChangedModules[@]}"
           do
             #Retrieve module name from .properties file
-            name=$(cat "./$eachModule/module_name.properties" | grep "name" | cut -d "=" -f2)
+            name=$(getModuleName "./$eachModule/module_name.properties")
             echo "The name of $module module is $name"
           
             #Build path to .jar file of connector
