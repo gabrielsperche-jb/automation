@@ -32,9 +32,11 @@ jobs:
           
           commonChanged=false
           if echo $list | grep -Eq "/common\b"; then
+            echo "Entrou no if"
             commonChanged=true
           fi
-        
+
+
           echo "valor de commonChanged: $commonChanged"
 
           
