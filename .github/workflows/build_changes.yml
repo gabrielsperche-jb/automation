@@ -34,6 +34,8 @@ jobs:
             commonChanged=true
           fi
           
+          echo ls ../automation
+          
           if $commonChanged; then
             allModules=$(find ../automation/ -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
             for module in $(echo $list | tr ',' ' '); do
