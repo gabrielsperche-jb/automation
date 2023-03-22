@@ -9,7 +9,7 @@ Jitterbit-Activity-EntityTypeId-update: 2510704
 Jitterbit-Activity-EntityTypeId-delete: 2510705
 Jitterbit-Activity-EntityTypeId-search: 2510706
 Jitterbit-ConnectorClassLoader-Version: 1.0.0
-ReleaseTag: auxiliarConnectorFromManifest
+ReleaseTag: SimpleConnectorManifest
 Jitterbit-Connector-UI: adapter.json
 Class-Path: lib/android-json-0.0.20131108.vaadin1.jar
             lib/aopalliance-repackaged-2.4.0-b34.jar
