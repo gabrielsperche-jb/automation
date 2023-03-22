@@ -38,8 +38,7 @@ jobs:
             allModules=$(find /home/runner/work/automation/automation -type d -name '*-connector*' -printf "%f ")
             echo "Non-Filtered: $allModules"
         
-            # Filtro dos módulos modificados da lista de todos os módulos
-            filteredModules=$(echo "$allModules" | grep -v "$(echo "$list" | sed 's/,/\\|/g')")
+            filteredModules=$(diff <(echo "$allModules" | tr ' ' '\n' | sort) <(echo "$list" | tr ',' '\n' | sort) | grep '^<' | sed 's/< //' | tr '\n' ' ')
             echo "Filtered: $filteredModules"
           
             for module in $allModules; do
