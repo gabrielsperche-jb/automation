@@ -56,7 +56,7 @@ jobs:
           
           echo "commonFlag=$has_common" >> $GITHUB_OUTPUT
           echo "modules=$list" >> $GITHUB_OUTPUT
-          echo "filteredModules=$filteredByManifest" >> $GITHUB_OUTPUT
+          echo "filteredModules=${filteredByManifest[@]}" >> $GITHUB_OUTPUT
 
       # Build the changed modules using Maven
       - name: Build Projects
