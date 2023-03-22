@@ -41,6 +41,7 @@ jobs:
             allModules=$(find /home/runner/work/automation/automation -type f -name '*-connector*' -exec basename {} \; | awk -F. '{print $1}' | uniq)
             echo $allModules
             echo "executed allmodules"
+            ls /home/runner/work/automation/automation/*-connector* | awk -F. '{print $1}' | uniq
             for module in $(echo $list | tr ',' ' '); do
               if echo $module | grep -qE ".*-connector.*"; then
                 allModules=$(echo $allModules | sed "s/\b$module\b//g")
