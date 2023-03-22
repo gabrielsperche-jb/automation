@@ -191,6 +191,10 @@ jobs:
           IFS=' ' read -ra allChangedModules <<< "$changedModules"
           echo "Module Names: ${allChangedModules[@]}"
           
+          # Get list of affected connectors by common changes
+          commonChangedConnectors="${{ steps.list_modules.outputs.filteredModules }}"
+          commonChangedConnArray=$(echo "${filteredModules}" | tr ' ' ',')
+          
           tag=${{ steps.increment_tag.outputs.new_tag }}
           echo "Tag name: $tag"
           
@@ -210,6 +214,26 @@ jobs:
           
             #Create folder to each connector with same tag
             connectorFolder=$tag"-"$name
+            echo "Connector Folder: $connectorFolder"
+            mkdir -p ./$firstConnector/target/filesToUpload/$connectorFolder
+          
+            #Move the .jar to destination folder
+            mv -f $connectorJarPath ./$firstConnector/target/filesToUpload/$connectorFolder
+          done
+          
+          #Do the same to common affected connectors
+          for connector in "${commonChangedConnArray[@]}"
+          do
+            #Retrieve module name from .properties file
+            name=$(getModuleName "$connector")
+            echo "The name of $module module is $name"
+          
+            #Build path to .jar file of connector
+            connectorJarPath=$(ls -1 ./$connector/target/*.jar)
+            echo "Connector Jar Path: $connectorJarPath"
+          
+            #Create folder to each connector with same tag
+            connectorFolder=$tag"-"$name"-common"
             echo "Connector Folder: $connectorFolder"
             mkdir -p ./$firstConnector/target/filesToUpload/$connectorFolder
           
