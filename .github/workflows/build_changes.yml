@@ -56,7 +56,7 @@ jobs:
           
           echo "commonFlag=$has_common" >> $GITHUB_OUTPUT
           echo "modules=$list" >> $GITHUB_OUTPUT
-          echo "filteredModules=$allModules" >> $GITHUB_OUTPUT
+          echo "filteredModules=$filteredByManifest" >> $GITHUB_OUTPUT
 
       # Build the changed modules using Maven
       - name: Build Projects
@@ -64,6 +64,8 @@ jobs:
           modules="${{ steps.list_modules.outputs.modules }}"
           filteredModules="${{ steps.list_modules.outputs.filteredModules }}"
           flag="${{ steps.list_modules.outputs.commonFlag }}"
+          
+          filteredModulesArray=$(echo "${filteredModules}" | tr ' ' ',')
           
           if [ -z "$modules" ]; then
             echo "No changes in modules. Skipping build."
@@ -73,9 +75,11 @@ jobs:
             mvn -q --projects $modules --also-make install
           fi
           
-          if ["$flag"]; then
+          echo "Does commons changed: $flag"
+          
+          if $flag; then
             echo "Modules will be built due changes on common"
-            echo "Building using: mvn -q --projects $filteredModules --also-make install"
+            echo "Building using: mvn -q --projects $filteredModulesArray --also-make install"
             mvn -q --projects $filteredModules --also-make install
           fi
 
