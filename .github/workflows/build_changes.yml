@@ -37,9 +37,11 @@ jobs:
           if $has_common; then
             allModules=$(find /home/runner/work/automation/automation -type d -name '*-connector*' -printf "%f ")
             echo "Non-Filtered: $allModules"
-            for module in $list; do
-              allModules=$(echo "$allModules" | grep -vF "$module")
+          
+            for module in $(echo "$list" | tr ',' ' '); do
+              allModules=$(echo "$allModules" | sed "/^$module$/d")
             done
+          
             echo "Filtered: $allModules"
           
             for module in $allModules; do
