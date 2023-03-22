@@ -30,6 +30,9 @@ jobs:
           list=$(git diff --name-only HEAD^ | grep -Eo ".*(connector|common)\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
           echo "Modules changed: $list"
           
+          pwd
+          ls -l ./automation/
+          
           has_common=$(echo "$list" | grep -- '-common' > /dev/null && echo true || echo false)
 
           echo "Commit includes common changes: $has_common"
