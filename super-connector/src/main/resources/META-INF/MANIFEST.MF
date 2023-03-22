@@ -1,4 +1,4 @@
-Author: Jitterbit
+Author: Gabriel
 Version: 1.0.0
 Jitterbit-Connector-Key: 33adf4a8-d838-4891-a056-1c3a597c8475
 Jitterbit-Connector-Secret: 9ca8a647-de68-4c12-a6df-f62ce8420a1f
