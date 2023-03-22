@@ -44,7 +44,7 @@ jobs:
             filteredByManifest=()
             
             for module in $filteredModules; do
-              if grep -q '^Author: Jitterbit$' "/home/runner/work/automation/automation/$module/META-INF/MANIFEST.MF"; then
+              if grep -q '^Author: Jitterbit$' "/home/runner/work/automation/automation/$module/src/main/resources/META-INF/MANIFEST.MF"; then
                 filteredByManifest+=("$module")
               fi
             done
