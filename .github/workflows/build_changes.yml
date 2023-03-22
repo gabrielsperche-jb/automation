@@ -35,7 +35,8 @@ jobs:
           echo "Commit includes common changes: $has_common"
 
           if $has_common; then
-            allModules=$(find ../automation/ -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
+            allModules=$(find ./automation/ -type f -name '*-connector*' -exec basename {} \; | awk -F. '{print $1}' | uniq)
+            echo $allModules
             echo "executed allmodules"
             for module in $(echo $list | tr ',' ' '); do
               if echo $module | grep -qE ".*-connector.*"; then
