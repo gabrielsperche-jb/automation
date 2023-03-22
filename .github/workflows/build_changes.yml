@@ -31,14 +31,14 @@ jobs:
           echo "Modules changed: $list"
           
           pwd
-          ls -l ./automation/
+          ls -l /home/runner/work/automation/automation
           
           has_common=$(echo "$list" | grep -- '-common' > /dev/null && echo true || echo false)
 
           echo "Commit includes common changes: $has_common"
 
           if $has_common; then
-            allModules=$(find ./automation/ -type f -name '*-connector*' -exec basename {} \; | awk -F. '{print $1}' | uniq)
+            allModules=$(find /home/runner/work/automation/automation -type f -name '*-connector*' -exec basename {} \; | awk -F. '{print $1}' | uniq)
             echo $allModules
             echo "executed allmodules"
             for module in $(echo $list | tr ',' ' '); do
