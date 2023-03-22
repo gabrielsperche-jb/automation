@@ -31,15 +31,13 @@ jobs:
           echo "Modules changed: $list"
           
           commonChanged=false
-          if echo $list | grep -Eq "/common\b"; then
+          if [ $(echo "$list" | grep -Eq "/common\b"; echo $?) -eq 0 ]; then
             echo "Entrou no if"
             commonChanged=true
           fi
 
-
           echo "valor de commonChanged: $commonChanged"
 
-          
           if $commonChanged; then
             allModules=$(find ../automation/ -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
             for module in $(echo $list | tr ',' ' '); do
@@ -54,8 +52,8 @@ jobs:
                 allModules=$(echo $allModules | sed "s/\b$module\b//g")
               fi
             done
-
           fi
+
           
           echo "All Filtered Modules: $allModules"
           echo "commonFlag=$commonChanged" >> $GITHUB_OUTPUT
