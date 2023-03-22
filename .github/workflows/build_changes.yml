@@ -37,12 +37,10 @@ jobs:
           if $has_common; then
             allModules=$(find /home/runner/work/automation/automation -type d -name '*-connector*' -printf "%f ")
             echo "Non-Filtered: $allModules"
-          
-            for module in $(echo "$list" | tr ',' ' '); do
-              allModules=$(echo "$allModules" | sed "/^$module$/d")
-            done
-          
-            echo "Filtered: $allModules"
+        
+            # Filtro dos módulos modificados da lista de todos os módulos
+            filteredModules=$(echo "$allModules" | grep -v "$(echo "$list" | sed 's/,/\\|/g')")
+            echo "Filtered: $filteredModules"
           
             for module in $allModules; do
               author=$(unzip -p "$module" src/main/resources/META-INF/MANIFEST.MF | grep -i ^author: | awk -F ': ' '{print $2}')
