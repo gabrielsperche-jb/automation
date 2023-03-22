@@ -80,7 +80,7 @@ jobs:
           if $flag; then
             echo "Modules will be built due changes on common"
             echo "Building using: mvn -q --projects $filteredModulesArray --also-make install"
-            mvn -q --projects $filteredModules --also-make install
+            mvn -q --projects $filteredModulesArray --also-make install
           fi
 
       # Get the latest release tag from the repository.
