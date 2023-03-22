@@ -30,13 +30,9 @@ jobs:
           list=$(git diff --name-only HEAD^ | grep -Eo ".*(connector|common)\/" | uniq | sed 's/\/$//' | tr '\n' ',' | sed 's/,$//')
           echo "Modules changed: $list"
           
-          commonChanged=false
-          if [ $(echo "$list" | grep -Eq "/common\b"; echo $?) -eq 0 ]; then
-            echo "Entrou no if"
-            commonChanged=true
-          fi
+          has_common=$(echo "$list" | grep -- '-common' > /dev/null && echo true || echo false)
 
-          echo "valor de commonChanged: $commonChanged"
+          echo "valor de commonChanged: $has_common"
 
           if $commonChanged; then
             allModules=$(find ../automation/ -type f -name '*-connector*' | awk -F/ '{print $(NF)}' | uniq)
