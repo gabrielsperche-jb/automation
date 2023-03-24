@@ -23,15 +23,9 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-#      - name: Send request to Connector Repo
-#        run: |
-#          echo "Sending POST request for item TestAuto-Conn01"
-#          curl -X POST "https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=10.45.0.31" > stdout
-#          response=$(cat stdout)
-#          echo "Response: ${response}"
-
-      - name: Deploy Stage
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=10.45.0.31'
-          method: 'POST'
+      - name: Send request to Connector Repo
+        run: |
+          echo "Sending POST request for item TestAuto-Conn01"
+          curl -X POST "https://jsonplaceholder.typicode.com/posts" -H "Content-Type: application/json" > stdout
+          response=$(cat stdout)
+          echo "Response: ${response}"
