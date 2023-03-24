@@ -29,7 +29,13 @@ jobs:
           curl -X POST "https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=10.45.0.31" > stdout
           response=$(cat stdout)
           echo "Response: ${response}"
-#          for item in "${{ matrix.items }}"; do
-#            echo "Sending POST request for item ${item}"
-#            curl -X POST "https://example.com/api/item/${item}" -H "Content-Type: application/json"
-#          done
+
+      - name: Make POST requests
+        id: http-request
+        uses: peter-evans/http-request@v1.6.0
+        env:
+          DESTINATION_URL: https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=10.45.0.31
+        with:
+          method: 'POST'
+          headers: ''
+          body: ''
