@@ -1,6 +1,6 @@
 name: Automation Flow
 
-on: [ push ]
+on: [ merge ]
 
 
 jobs:
@@ -158,10 +158,10 @@ jobs:
           #Function to retrieve name from .properties, Manifest.MF or adapter.json files
           getModuleName() {
               local module="$1"
-              local propFile="./$module/module_name.properties"
+              local propFile="./$module/spec.properties"
               local name=""
           
-            #Check if module_name.properties exists
+            #Check if spec.properties exists
             if [ -f "$propFile" ]; then
               name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
             fi
@@ -234,7 +234,7 @@ jobs:
             echo "Connector Jar Path: $connectorJarPath"
           
             #Create folder to each connector with same tag
-            connectorFolder=$tag"-"$name"-common"
+            connectorFolder=$tag"-common-"$name
             echo "Connector Folder: $connectorFolder"
             mkdir -p ./$firstConnector/target/filesToUpload/$connectorFolder
           
@@ -255,38 +255,3 @@ jobs:
           password: Rafael@10
           localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
-
-      - name: Create Endpoints to Connector Repo request
-        if: success()
-        id: createUrl
-        run: |
-          connectorNames = "${{ steps.ftpFiles.outputs.firstChangedModule }}"
-          IFS=' ' read -ra connectorNamesArray <<< "connectorNames"
-          
-          urls=()
-          for connectorName in connectorNamesArray
-          do
-            echo "Send request to $URL"
-            curl -X POST "$URL"
-          done
-
-      - name: Send request to Connector Repo
-        run: |
-          connectorNames = "${{ steps.ftpFiles.outputs.firstChangedModule }}"
-          IFS=' ' read -ra connectorNamesArray <<< "connectorNames"
-          
-          for url in connectorNamesArray
-          do
-            echo "Send request to $URL"
-            curl -X POST "$URL"
-          done
-
-      - name: Updating version on connector repo
-        id: httpReq1
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=TestAuto-Conn01&releaseVersion=${{ steps.createFolders.outputs.releaseFolderName }}'
-          method: 'POST'
-      - name: Connector Repo Response
-        run: |
-          echo ${{ steps.httpReq1.outputs.response }}
