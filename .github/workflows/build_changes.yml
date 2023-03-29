@@ -264,6 +264,10 @@ jobs:
           modifiedConnectors="${{ steps.list_modules.outputs.modules }}"
           filteredConnectors="${{ steps.list_modules.outputs.filteredModules }}"
           
+          
+          IFS=' ' read -ra modifiedConnectorsArray <<< "$modifiedConnectors"
+          echo "Modified Connectors Array: ${modifiedConnectorsArray[@]}"
+          
           #Function to retrieve name from .properties, Manifest.MF or adapter.json files
           getModuleName() {
               local module="$1"
@@ -296,12 +300,12 @@ jobs:
           
           for value in "${filteredConnectors[@]}"
           do
-            modifiedConnectors+=("$value")
+            modifiedConnectorsArray+=("$value")
           done
           
           urls=()
           
-          for connector in "${modifiedConnectors[@]}"
+          for connector in "${modifiedConnectorsArray[@]}"
           do 
             echo "Processing $connector connector"
             specFile="./$connector/spec.properties"
