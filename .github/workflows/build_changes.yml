@@ -255,3 +255,66 @@ jobs:
           password: Rafael@10
           localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
           remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
+
+      # Retrieve Filenames and Full Path of changed .jar files
+      - name: Build Endpoints
+        if: success()
+        id: endpoints
+        run: |
+          modifiedConnectors="${{ steps.list_modules.outputs.modules }}"
+          filteredConnectors="${{ steps.list_modules.outputs.filteredModules }}"
+          
+          #Function to retrieve name from .properties, Manifest.MF or adapter.json files
+          getModuleName() {
+              local module="$1"
+              local propFile="./$module/spec.properties"
+              local name=""
+          
+            #Check if spec.properties exists
+            if [ -f "$propFile" ]; then
+              name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+            fi
+          
+            #If it doesn't exists, try to retrieve from Manifest.MF
+            if [ -z "$name" ]; then
+              local manifestFile="./$module/target/classes/META-INF/MANIFEST.MF"
+              if [ -f "$manifestFile" ]; then
+                name="$(grep 'ReleaseTag' "$manifestFile" | cut -d':' -f2 | tr -d '[:space:]')"
+              fi
+            fi
+          
+            #Finally as last resource, retrieve from adapter.json
+            if [ -z "$name" ]; then
+              local adapterFile="./$module/ui/adapter.json"
+              if [ -f "$adapterFile" ]; then
+                name=$(jq -r '.name' "$adapterFile" | tr -d '[:space:]')
+              fi
+            fi
+          
+            echo "$name"
+          }
+          
+          for value in "${filteredConnectors[@]}"
+          do
+            modifiedConnectors+=("$value")
+          done
+          
+          urls=()
+          
+          for connector in "${modifiedConnectors[@]}"
+          do 
+            local specFile="./$connector/spec.properties"
+            connReleaseName ="$(grep 'ReleaseName' "$specFile" | cut -d'=' -f2)"
+            releaseTag=${{ steps.increment_tag.outputs.new_tag }}
+            moduleName=$(getModuleName "$connector")
+            releaseVersion="$releaseTag-$moduleName"
+            endpoint="https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=$connReleaseName&releaseVersion=$releaseVersion"
+            echo "Adding endpoint: $endpoint"
+            urls+=("$endpoint")
+          done
+          
+          echo "endpoints=${urls[@]}" >> $GITHUB_OUTPUT
+          echo "endpoints: ${urls[*]}"
+          
+          
+          
