@@ -303,7 +303,7 @@ jobs:
           
           for connector in "${modifiedConnectors[@]}"
           do 
-            local specFile="./$connector/spec.properties"
+            specFile="./$connector/spec.properties"
             connReleaseName ="$(grep 'ReleaseName' "$specFile" | cut -d'=' -f2)"
             releaseTag=${{ steps.increment_tag.outputs.new_tag }}
             moduleName=$(getModuleName "$connector")
