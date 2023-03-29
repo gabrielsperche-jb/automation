@@ -1,6 +1,6 @@
 name: Automation Flow
 
-on: [ merge ]
+on: [ push ]
 
 
 jobs:
