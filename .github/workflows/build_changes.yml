@@ -298,7 +298,7 @@ jobs:
             echo "$name"
           }
           
-          if [ ${filteredConnectors[@]} -ne 0 ]; then
+          if [ ${#filteredConnectors[@]} -ne 0 ]; then
             echo "entrei no if do filtered connectors"
             for value in "${filteredConnectors[@]}"; do
               modifiedConnectorsArray+=("$value")
