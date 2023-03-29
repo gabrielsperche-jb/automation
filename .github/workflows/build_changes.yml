@@ -263,7 +263,7 @@ jobs:
         run: |
           modifiedConnectors="${{ steps.list_modules.outputs.modules }}"
           filteredConnectors="${{ steps.list_modules.outputs.filteredModules }}"
-          
+          echo "filtered connectors: ${filteredConnectors[@]}"
           
           IFS=',' read -ra modifiedConnectorsArray <<< "$modifiedConnectors"
           echo "Modified Connectors Array: ${modifiedConnectorsArray[@]}"
