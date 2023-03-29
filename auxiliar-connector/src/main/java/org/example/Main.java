@@ -5,7 +5,7 @@ public class Main {
     System.out.println("Auxiliary Module!");
     int num = 9;
     int hnum = 45;
-    int hfnum = 8777;
+    int hfnum = 87;
     String test = "g";
   }
 }

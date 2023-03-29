@@ -265,7 +265,7 @@ jobs:
           filteredConnectors="${{ steps.list_modules.outputs.filteredModules }}"
           
           
-          IFS=' ' read -ra modifiedConnectorsArray <<< "$modifiedConnectors"
+          IFS=',' read -ra modifiedConnectorsArray <<< "$modifiedConnectors"
           echo "Modified Connectors Array: ${modifiedConnectorsArray[@]}"
           
           #Function to retrieve name from .properties, Manifest.MF or adapter.json files
