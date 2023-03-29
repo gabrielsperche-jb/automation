@@ -298,10 +298,11 @@ jobs:
             echo "$name"
           }
           
-          for value in "${filteredConnectors[@]}"
-          do
-            modifiedConnectorsArray+=("$value")
-          done
+          if [ ${filteredConnectors[@]} -ne 0 ]; then
+            for value in "${filteredConnectors[@]}"; do
+              modifiedConnectorsArray+=("$value")
+            done
+          fi
           
           urls=()
           
