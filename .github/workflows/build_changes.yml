@@ -244,17 +244,17 @@ jobs:
 
           echo "targetFolder=$firstConnector" >> $GITHUB_OUTPUT
 
-      # Upload the release folder to Reposit replacing if exists
-      - name: Upload files to ftp server
-        if: success()
-        uses: wangyucode/sftp-upload-action@v2.0.2
-        id: upload-to-ftp
-        with:
-          host: reposit.jitterbit.com
-          username: gabriel.goncalves
-          password: Rafael@10
-          localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
-          remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
+#      # Upload the release folder to Reposit replacing if exists
+#      - name: Upload files to ftp server
+#        if: success()
+#        uses: wangyucode/sftp-upload-action@v2.0.2
+#        id: upload-to-ftp
+#        with:
+#          host: reposit.jitterbit.com
+#          username: gabriel.goncalves
+#          password: Rafael@10
+#          localDir: './${{ steps.createFolders.outputs.targetFolder }}/target/filesToUpload'
+#          remoteDir: './Builds/connectors/CDATA/test/uploadedFile'
 
       # Retrieve Filenames and Full Path of changed .jar files
       - name: Build Endpoints
@@ -272,7 +272,7 @@ jobs:
           
             #Check if spec.properties exists
             if [ -f "$propFile" ]; then
-              name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+              name="$(grep 'ReleaseName' "$propFile" | cut -d'=' -f2)"
             fi
           
             #If it doesn't exists, try to retrieve from Manifest.MF
@@ -303,11 +303,14 @@ jobs:
           
           for connector in "${modifiedConnectors[@]}"
           do 
+            echo "Processing $connector connector"
             specFile="./$connector/spec.properties"
             connReleaseName="$(grep 'ReleaseName' "$specFile" | cut -d'=' -f2)"
             releaseTag=${{ steps.increment_tag.outputs.new_tag }}
             moduleName=$(getModuleName "$connector")
             releaseVersion="$releaseTag-$moduleName"
+            echo "Release Version: $releaseVersion"
+            echo "Release Name: $connReleaseName"
             endpoint="https://connectorrepo.jitterbit.us/Api/Edit?handler=ReleaseVersionByConnectorName&ConnectorName=$connReleaseName&releaseVersion=$releaseVersion"
             echo "Adding endpoint: $endpoint"
             urls+=("$endpoint")
