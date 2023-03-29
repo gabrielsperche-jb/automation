@@ -1,6 +1,6 @@
 name: Automation Flow
 
-on: [ push ]
+on: [ merge ]
 
 
 jobs:
@@ -163,7 +163,7 @@ jobs:
           
             #Check if spec.properties exists
             if [ -f "$propFile" ]; then
-              name="$(grep 'name' "$propFile" | cut -d'=' -f2)"
+              name="$(grep 'ReleaseName' "$propFile" | cut -d'=' -f2)"
             fi
           
             #If it doesn't exists, try to retrieve from Manifest.MF
