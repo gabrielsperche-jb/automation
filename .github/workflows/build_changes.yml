@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Do something
-        run: echo "PR was merged!"
+        run: echo "PR was merged!!!"
