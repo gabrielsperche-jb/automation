@@ -12,4 +12,4 @@ jobs:
       - name: Do something
         run: |
           branch="${{ github.event.pull_request.head.ref }}"
-          echo "Branch is: $branch"
+          echo "Branch name: $branch"
