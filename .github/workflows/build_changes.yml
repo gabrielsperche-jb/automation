@@ -10,4 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Do something
-        run: echo "PR was merged!!!"
+        run: |
+          branch="${{ github.event.pull_request.head.ref }}"
+          echo "Branch is: $branch"
