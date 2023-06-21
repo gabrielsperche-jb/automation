@@ -1,15 +1,35 @@
 name: Automation Flow
 
-on:
-  pull_request:
-    types: [closed]
+on: [ push ]
 
 jobs:
-  myJob:
-    if: github.event.pull_request.merged == false
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Do something
+      # Checkout the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      # Set up the Java environment
+      - name: Preparing Environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.0.192'
+          java-package: jdk
+          architecture: x64
+
+      - name: Build with Maven
+        run: mvn clean install auxiliar-connector
+
+      - name: Publish to JFrog Artifactory
+        uses: jfrog/setup-jfrog-cli@v1
+        with:
+          version: 'latest'
         run: |
-          branch="${{ github.event.pull_request.head.ref }}"
-          echo "Branch name: $branch"
+          jfrog rt c --url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
+          jfrog rt u 'auxiliar-connector/target/*.jar' jb-connector --build-name=test --build-number=$GITHUB_RUN_NUMBER
