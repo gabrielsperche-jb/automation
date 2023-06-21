@@ -27,11 +27,9 @@ jobs:
         run: mvn clean install
 
       - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v1
-        with:
-          version: 'latest'
-
-      - name: Publish to JFrog Artifactory
-        run: |
-          jfrog rt c --url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
+        uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: ${{ secrets.JFROG_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_ACCESS_TOKEN }}
+      - run: |
           jfrog rt u 'auxiliar-connector/target/*.jar' jb-connector --build-name=test --build-number=$GITHUB_RUN_NUMBER
