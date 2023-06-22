@@ -35,6 +35,13 @@ jobs:
           mkdir -p ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
           mv -f ./auxiliar-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
           mv -f ./support-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
-          ls ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
-          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
-          jfrog rt u './auxiliar-connector/target/filesToUpload/**/*.jar' jb-connectors --build-name=auxiliary --build-number=$GITHUB_RUN_NUMBER
+          
+          ls ./auxiliar-connector/target/filesToUpload
+          
+          for file in "./auxiliar-connector/target/filesToUpload"
+          do
+            echo "Folder Name: $file"
+          done
+
+#          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
+#          jfrog rt u './auxiliar-connector/target/filesToUpload/**/*.jar' jb-connectors --build-name=auxiliary --build-number=$GITHUB_RUN_NUMBER
