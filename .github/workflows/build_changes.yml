@@ -38,7 +38,7 @@ jobs:
           
           #ls ./auxiliar-connector/target/filesToUpload
           
-          for dir in /auxiliar-connector/target/filesToUpload/*;
+          for dir in /auxiliar-connector/target/filesToUpload/*/;
           do
             echo "Folder Name: $dir"
           done
