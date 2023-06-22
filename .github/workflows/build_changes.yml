@@ -40,7 +40,7 @@ jobs:
           
           directory="./auxiliar-connector/target/filesToUpload"
           
-          find "$directory" -type d -print0 | while IFS= read -r -d '' dir; 
+          find "$directory" -type d -exec basename {} \; | while IFS= read -r dir; 
           do
             echo "Folder Name: $dir"
           done
