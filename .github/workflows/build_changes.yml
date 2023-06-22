@@ -31,5 +31,5 @@ jobs:
 
       - name: Publish to JFrog Artifactory
         run: |
-          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }} --interactive=false
+          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
           jfrog rt u 'auxiliar-connector/target/*.jar' jb-connectors --build-name=test --build-number=$GITHUB_RUN_NUMBER
