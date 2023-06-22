@@ -38,7 +38,7 @@ jobs:
           
           #ls ./auxiliar-connector/target/filesToUpload
           
-          directory="./auxiliar-connector/target/filesToUpload"
+          directory="/auxiliar-connector/target/filesToUpload/"
           
           find "$directory" -type d -exec basename {} \; | while IFS= read -r dir; 
           do
