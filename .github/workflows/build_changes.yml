@@ -44,5 +44,5 @@ jobs:
           do
             dir_name=$(basename "$dir")
             echo "Uploading Release: $dir_name"
-            jfrog rt u './auxiliar-connector/target/filesToUpload/$dir_name/*.jar' jb-connector-generic/$dir_name --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
+            jfrog rt u './auxiliar-connector/target/filesToUpload/"$dir_name"/*.jar' jb-connector-generic/$dir_name --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
           done
