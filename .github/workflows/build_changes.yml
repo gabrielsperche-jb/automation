@@ -46,7 +46,8 @@ jobs:
             echo "Uploading Release: $dir_name"
             jars=($dir/*.jar)
             for jar in "${jars[@]}"; do
+              jar_name=$(basename "$jar")
               echo "Uploading $jar to jb-connector-generic/$dir_name/"
-              jfrog rt u "$jar" "jb-connector-generic/$dir_name/" --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
+              jfrog rt u "$jar" "jb-connector-generic/$dir_name/$jar_name" --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
             done
           done
