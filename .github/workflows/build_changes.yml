@@ -36,17 +36,11 @@ jobs:
           mv -f ./auxiliar-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
           mv -f ./support-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
           
-          directory="./auxiliar-connector/target/filesToUpload/"
-          
           jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
           
-          jfrog rt upload "./auxiliar-connector/target/filesToUpload/*" jb-connector-generic --flat=false
-
-          for dir in "$directory"*/;
+          for dir in ./auxiliar-connector/target/filesToUpload/*/;
           do
             dir_name=$(basename "$dir")
             echo "Uploading Release: $dir_name"
-
-            jarPath="./auxiliar-connector/target/filesToUpload/$dir_name/*.jar"
-            jfrog rt upload $jarPath jb-connector-generic --flat=false
+            jfrog rt u "$dir/*.jar" "jb-connector-generic/$dir_name/{1}" --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER --flat=false
           done
