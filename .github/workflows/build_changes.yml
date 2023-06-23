@@ -32,22 +32,21 @@ jobs:
       - name: Publish to JFrog Artifactory
         run: |
           mkdir -p ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
-          mkdir -p ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
+          #mkdir -p ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
           mv -f ./auxiliar-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
-          mv -f ./support-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
+          mv -f ./support-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
           
           directory="./auxiliar-connector/target/filesToUpload/"
           
           jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
           
-          for dir in "$directory"*/; 
-          do
-            dir_name=$(basename "$dir")
-            echo "Uploading Release: $dir_name"
-            jars=($dir/*.jar)
-            for jar in "${jars[@]}"; do
-              jar_name=$(basename "$jar")
-              echo "Uploading $jar to jb-connector-generic/$dir_name/"
-              jfrog rt u "$jar" "jb-connector-generic/$dir_name/$jar_name" --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
-            done
-          done
+          jfrog rt upload "./auxiliar-connector/target/filesToUpload/10.20.30.40-aux/*" jb-connector-generic
+
+#          for dir in "$directory"*/;
+#          do
+#            dir_name=$(basename "$dir")
+#            echo "Uploading Release: $dir_name"
+#
+#            jarPath="./auxiliar-connector/target/filesToUpload/$dir_name/*.jar"
+#            jfrog rt upload $jarPath jb-connector-generic/$dir_name
+#          done
