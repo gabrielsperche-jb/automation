@@ -38,11 +38,11 @@ jobs:
                     
           directory="./auxiliar-connector/target/filesToUpload/"
           
+          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
+          
           for dir in "$directory"*/; 
           do
             dir_name=$(basename "$dir")
-            echo "Folder Name: $dir_name"
+            echo "Uploading Release: $dir_name"
+            jfrog rt u './auxiliar-connector/target/filesToUpload/**/*.jar' jb-connectors --build-name=$dir_name --build-number=$GITHUB_RUN_NUMBER
           done
-
-#          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
-#          jfrog rt u './auxiliar-connector/target/filesToUpload/**/*.jar' jb-connectors --build-name=auxiliary --build-number=$GITHUB_RUN_NUMBER
