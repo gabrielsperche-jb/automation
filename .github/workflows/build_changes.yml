@@ -40,7 +40,7 @@ jobs:
           
           jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
           
-          jfrog rt upload "./auxiliar-connector/target/filesToUpload/10.20.30.40-aux/*" jb-connector-generic
+          jfrog rt upload "./auxiliar-connector/target/filesToUpload/10.20.30.40-aux/*" jb-connector-generic --recursive=false
 
 #          for dir in "$directory"*/;
 #          do
