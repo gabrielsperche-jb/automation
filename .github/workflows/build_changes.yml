@@ -35,14 +35,13 @@ jobs:
           mkdir -p ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
           mv -f ./auxiliar-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-aux
           mv -f ./support-connector/target/*.jar ./auxiliar-connector/target/filesToUpload/10.20.30.40-sup
-          
-          #ls ./auxiliar-connector/target/filesToUpload
-          
+                    
           directory="./auxiliar-connector/target/filesToUpload/"
           
-          find "$directory" -type d -exec basename {} \; | while IFS= read -r dir; 
+          for dir in "$directory"*/; 
           do
-            echo "Folder Name: $dir"
+            dir_name=$(basename "$dir")
+            echo "Folder Name: $dir_name"
           done
 
 #          jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
