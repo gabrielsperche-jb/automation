@@ -38,6 +38,7 @@ jobs:
           
           jfrog config add --artifactory-url=${{ secrets.JFROG_URL }} --access-token=${{ secrets.JFROG_ACCESS_TOKEN }}
           
+          
           for dir in ./auxiliar-connector/target/filesToUpload/*/;
           do
             dir_name=$(basename "$dir")
